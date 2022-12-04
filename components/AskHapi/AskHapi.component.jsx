@@ -21,6 +21,17 @@ const useStyles = createStyles((theme) => ({
       },
     },
 
+    results: {
+      backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
+      borderRadius: theme.radius.lg,
+      padding: '4px 12px',
+      maxWidth: '100%',
+      [theme.fn.smallerThan('md')]: {
+        maxWidth: '100%',
+        marginRight: 0,
+      },
+    },
+
     title: {
       color: theme.colorScheme === 'dark' ? theme.white : theme.black,
       fontFamily: `Greycliff CF, ${theme.fontFamily}`,
@@ -102,27 +113,23 @@ export default function AskHapi() {
                     </div>
                 </div>
                 <div>
-                    <Center>
-                        <div>
-                            <Button variant="gradient" onClick={generateResponse}>ASK HAPI</Button>
-                        </div>
-                    </Center>
-                </div>
-                <div>
                 <Textarea
                   onChange={onTextChanged}
                   placeholder="What can I do for you, my human overlord?"
                   label="Ask HAPI to create anything"
                   withAsterisk
                 />
+                <div>
+                    <Center>
+                        <div style={{ margin: '12px' }}>
+                            <Button variant="gradient" onClick={generateResponse}>ASK HAPI</Button>
+                        </div>
+                    </Center>
                 </div>
-                {result === '' ? '' :
-                    <div className={classes.highlight} style={{ marginTop: '6px', overflowY: 'scroll' }}>
-                        <Text component="p" fz="xl" fw="500">
-                            {result}
-                        </Text>
-                    </div>
-                }
+                </div>
+                <div className={classes.results}>
+                    {result.split('\n').map(place => <p> {place} </p>)}
+                </div>
             </Container>
         </div>
     );
