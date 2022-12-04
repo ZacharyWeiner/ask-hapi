@@ -267,7 +267,7 @@ export default function AskHapi() {
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
-                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI</Button>
+                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI 4¢</Button>
                           </div>
                       </Center>
                   </div>
@@ -285,7 +285,7 @@ export default function AskHapi() {
                   : <Center>
                       { dataFinishReason !== 'stop'
                       ? <div style={{ margin: '12px' }}>
-                            <Button variant="gradient" onClick={generateResponse}>Continue</Button>
+                            <Button variant="gradient" onClick={generateResponse}>Continue 4¢</Button>
                         </div>
                         : ''
                       }
