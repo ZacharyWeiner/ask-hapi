@@ -7,4 +7,12 @@ module.exports = withBundleAnalyzer({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.amazon.com',
+      },
+    ],
+  },
 });

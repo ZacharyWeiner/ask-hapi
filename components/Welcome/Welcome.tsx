@@ -6,19 +6,17 @@ export function Welcome() {
 
   return (
     <>
-      <Title className={classes.title} align="center" mt={100}>
-        Welcome to{' '}
+      <Title className={classes.title} align="center" mt={24}>
+        Ask {' '}
         <Text inherit variant="gradient" component="span">
-          Mantine
+          HAPI
         </Text>
       </Title>
       <Text color="dimmed" align="center" size="lg" sx={{ maxWidth: 580 }} mx="auto" mt="xl">
-        This starter Next.js project includes a minimal setup for server side rendering, if you want
-        to learn more on Mantine + Next.js integration follow{' '}
+        Ask HAPI anything. For some ideas{' '}
         <Anchor href="https://mantine.dev/guides/next/" size="lg">
-          this guide
+           click here
         </Anchor>
-        . To get started edit index.tsx file.
       </Text>
     </>
   );
