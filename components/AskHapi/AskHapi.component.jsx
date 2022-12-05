@@ -225,6 +225,15 @@ export default function AskHapi() {
         setUserInput(e.target.value);
     }
 
+    function formatResult() {
+      const inx = result.indexOf('\n');
+      console.log({ inx });
+      if (inx < 0) {
+        return (<p> {{ result }}</p>);
+      }
+      return result.split('\n').map((place, index) => <p key={index}> {place} </p>);
+    }
+
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
@@ -273,10 +282,12 @@ export default function AskHapi() {
                   </div>
                 </div>
                 {
-                  result === ''
+                  !result
                   ? ''
                   : <div className={classes.results}>
-                      {result.split('\n').map((place, index) => <p key={index}> {place} </p>)}
+                      {
+                        result.split('\n').map((place, index) => <p key={index}> {place} </p>)
+                      }
                     </div>
                 }
                 {
