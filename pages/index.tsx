@@ -13,6 +13,7 @@ export default function HomePage() {
       <Welcome />
       <AskHapi />
       <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
+      <div> Heroku </div>
     </div>
   );
 }
