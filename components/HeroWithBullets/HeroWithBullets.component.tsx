@@ -65,10 +65,6 @@ import {
 
   export function HeroBullets() {
     const { classes } = useStyles();
-    function onClickHandler(e:React.MouseEvent<HTMLElement>) {
-      console.log(e.target);
-      return e;
-    }
     return (
       <div>
         <Container>

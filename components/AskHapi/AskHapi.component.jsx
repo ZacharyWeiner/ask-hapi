@@ -132,8 +132,8 @@ export default function AskHapi() {
       const w = window;
       try {
         const resp = await w.bitcoin.connect();
-        console.log(resp.publicKey.toString());
-        console.log(resp.paymail.toString());
+        console.log('Twetch PubKey: ', resp.publicKey.toString());
+        console.log('Twetch Paymail: ', resp.paymail.toString());
       } catch (err) {
         // eslint-disable-next-line no-alert
         alert(err);
@@ -148,7 +148,7 @@ export default function AskHapi() {
             }],
           });
       } catch (err) {
-        console.log(err.action);
+        console.log('Twetch Payment Response Error ', err.action);
         return false;
       }
       console.log(paymentResponse.actionId);
@@ -159,7 +159,7 @@ export default function AskHapi() {
       const w = window;
       try {
         const resp = await w.sensilet.requestAccount();
-        console.log(resp.address);
+        console.log('Sensilet Address:', resp.address);
       } catch (err) {
         // eslint-disable-next-line no-alert
         alert(err);
@@ -175,10 +175,10 @@ export default function AskHapi() {
           ],
         });
       } catch (err) {
-        console.log(err.action);
+        console.log('Sensilet paymnet error:', err.action);
         return false;
       }
-      console.log(paymentResponse);
+      console.log('Sensilet Payment Response', paymentResponse);
       return true;
     }
     async function payWithRelay() {
@@ -190,7 +190,7 @@ export default function AskHapi() {
           const token = await w.relayone.authBeta();
           const [payload, signature] = token.split('.');
           const data = JSON.parse(atob(payload)); // Buffer.from(payload, 'base64')
-          console.log(data);
+          console.log('Relay Payment Info:', data);
           setRelayPaymail(data.paymail);
           // check its token from your origin
           //if (data.origin !== "yourdomain.com") throw new Error();
@@ -201,7 +201,7 @@ export default function AskHapi() {
       }
       try {
         const response = await w.relayone.send({ to: '1NVZHRegc5nYXBthaZ51FfX5MYY1D8m4er', amount: 0.04, currency: 'USD' });
-        console.log(response);
+        console.log('Relay Payment Response', response);
         paid = true;
       } catch (error) {
         paid = false;
@@ -223,7 +223,6 @@ export default function AskHapi() {
     }
 
     function onTextChanged(e) {
-        console.log(e.target.value);
         setUserInput(e.target.value);
     }
     async function generateResponse(event) {
