@@ -98,12 +98,14 @@ import {
                   export types
                 </List.Item>
                 <List.Item>
-                  <b>Free and open source</b> – all packages have MIT license, you can use Mantine in
-                  any project
+                  <b>Free and open source</b> –
+                   all packages have MIT license, you can use Mantine in
+                   any project
                 </List.Item>
                 <List.Item>
-                  <b>No annoying focus ring</b> – focus ring will appear only when user navigates with
-                  keyboard
+                  <b>No annoying focus ring</b> –
+                   focus ring will appear only when user navigates with
+                   keyboard
                 </List.Item>
               </List>
 

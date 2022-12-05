@@ -24,6 +24,6 @@ function generatePrompt(about, businessType) {
   let prompt =  "";
   if(!businessType || businessType === ""){ prompt = `"generate an business idea with a(n) ${about} theme"`}
   else{ prompt = `"generate an business idea for a ${businessType} business with a(n) ${about} theme"`}
-  console.log('Prompt: ', prompt})
+  console.log('Prompt: ', prompt)
   return prompt;
 }
