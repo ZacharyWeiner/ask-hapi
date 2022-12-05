@@ -18,6 +18,7 @@ export default async function (req, res,) {
     });
     let respondWith = req.body.previous ? req.body.previous + " " + completion.data.choices[0].text : completion.data.choices[0].text; 
     res.status(200).json({ result:  respondWith, finish_reason:  completion.data.choices[0].finish_reason});
+    //console.log(res)
   }catch(err){
     res.status(400).json({error: err});
   }

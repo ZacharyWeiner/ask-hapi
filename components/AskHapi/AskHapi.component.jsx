@@ -26,6 +26,8 @@ const useStyles = createStyles((theme) => ({
       borderRadius: theme.radius.lg,
       padding: '4px 12px',
       maxWidth: '100%',
+      flex: 1,
+      flexWrap: 'wrap',
       [theme.fn.smallerThan('md')]: {
         maxWidth: '100%',
         marginRight: 0,
@@ -80,7 +82,6 @@ export default function AskHapi() {
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
     const [relayPaymail, setRelayPaymail] = useState('');
-    const [responseRows, setResponseRows] = useState(0);
 
     useEffect(() => {
       // eslint-disable-next-line no-undef
@@ -125,7 +126,6 @@ export default function AskHapi() {
     function resetPrompt() {
       setPrompt('');
       setResult('');
-      setResponseRows(0);
     }
     async function payWithTwetch() {
       // eslint-disable-next-line no-undef
@@ -226,30 +226,12 @@ export default function AskHapi() {
         console.log(e.target.value);
         setUserInput(e.target.value);
     }
-
-    function formatResult() {
-      const inx = result.indexOf('\n');
-      console.log({ inx });
-      if (inx < 0) {
-        return (<p> {{ result }}</p>);
-      }
-      return result.split('\n').map((place, index) => <p key={index}> {place} </p>);
-    }
-    function getContentRows(content) {
-      let rows = 0;
-      rows = content.split('\n');
-      if (rows < 2) {
-        return 1;
-      }
-        return rows;
-    }
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
        let paid = false;
         paid = await pay();
         if (paid === false) { return; }
-        setResult('');
         const response = await fetch('/api/generateStory', {
           method: 'POST',
           headers: {
@@ -259,8 +241,6 @@ export default function AskHapi() {
         });
         const data = await response.json();
         setResult(data.result);
-        const rows = getContentRows(data.result);
-        setResponseRows(rows);
         setDataFinishReason(data.finish_reason);
         setLoading(false);
     }
@@ -292,15 +272,7 @@ export default function AskHapi() {
                       </Center>
                   </div>
                 </div>
-                {
-                  responseRows < 2
-                  ? <div className={classes.results}> {result} </div>
-                  : <div className={classes.results}>
-                      {
-                        result.split('\n').map((place, index) => <p key={index}> {place} </p>)
-                      }
-                    </div>
-                }
+                <div className={classes.results} style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre' }}> {result} </div>
                 {
                   (result) === ''
                   ? ''
