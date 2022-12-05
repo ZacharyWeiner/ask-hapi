@@ -277,7 +277,11 @@ export default function AskHapi() {
                       </Center>
                   </div>
                 </div>
-                <div className={classes.results} style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre' }}> {result} </div>
+                {
+                  (result) === ''
+                  ? ''
+                  : <Text className={classes.results} style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre-wrap' }}> {result} </Text>
+                }
                 {
                   (result) === ''
                   ? ''
