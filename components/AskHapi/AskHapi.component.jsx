@@ -80,6 +80,7 @@ export default function AskHapi() {
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
     const [relayPaymail, setRelayPaymail] = useState('');
+    const [responseRows, setResponseRows] = useState(0);
 
     useEffect(() => {
       // eslint-disable-next-line no-undef
@@ -124,6 +125,7 @@ export default function AskHapi() {
     function resetPrompt() {
       setPrompt('');
       setResult('');
+      setResponseRows(0);
     }
     async function payWithTwetch() {
       // eslint-disable-next-line no-undef
@@ -233,7 +235,14 @@ export default function AskHapi() {
       }
       return result.split('\n').map((place, index) => <p key={index}> {place} </p>);
     }
-
+    function getContentRows(content) {
+      let rows = 0;
+      rows = content.split('\n');
+      if (rows < 2) {
+        return 1;
+      }
+        return rows;
+    }
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
@@ -250,6 +259,8 @@ export default function AskHapi() {
         });
         const data = await response.json();
         setResult(data.result);
+        const rows = getContentRows(data.result);
+        setResponseRows(rows);
         setDataFinishReason(data.finish_reason);
         setLoading(false);
     }
@@ -282,8 +293,8 @@ export default function AskHapi() {
                   </div>
                 </div>
                 {
-                  !result
-                  ? ''
+                  responseRows < 2
+                  ? <div className={classes.results}> {result} </div>
                   : <div className={classes.results}>
                       {
                         result.split('\n').map((place, index) => <p key={index}> {place} </p>)
