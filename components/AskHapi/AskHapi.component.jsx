@@ -231,17 +231,23 @@ export default function AskHapi() {
        let paid = false;
         paid = await pay();
         if (paid === false) { return; }
-        const response = await fetch('/api/generateStory', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ description: userInput, previous: result }),
-        });
-        const data = await response.json();
-        setResult(data.result);
-        setDataFinishReason(data.finish_reason);
-        setLoading(false);
+        try {
+          const response = await fetch('/api/generateStory', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ description: userInput, previous: result }),
+          });
+          const data = await response.json();
+          console.log('Completion Data @ Client: ', data.completion_data);
+          setResult(data.result);
+          setDataFinishReason(data.finish_reason);
+          setLoading(false);
+        } catch (err) {
+          console.log('Error Generating A Response:', err);
+          alert('Error Generating A Response:', err);
+        }
     }
     return (
         <div>
