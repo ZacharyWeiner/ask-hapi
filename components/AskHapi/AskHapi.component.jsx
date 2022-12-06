@@ -1,6 +1,13 @@
-import { createStyles, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
+import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+
+export const bounce = keyframes({
+  'from, 20%, 53%, 80%, to': { transform: 'translate3d(0, 0, 0)' },
+  '40%, 43%': { transform: 'translate3d(0, -30px, 0)' },
+  '70%': { transform: 'translate3d(0, -15px, 0)' },
+  '90%': { transform: 'translate3d(0, -4px, 0)' },
+});
 
 const useStyles = createStyles((theme) => ({
     inner: {
@@ -58,6 +65,13 @@ const useStyles = createStyles((theme) => ({
 
       },
     },
+    imageBounce: {
+      flex: 1,
+      animation: `${bounce} 3s ease-in-out infinite`,
+      [theme.fn.smallerThan('md')]: {
+
+      },
+    },
 
     imageContainer: {
         height: '150px',
@@ -72,7 +86,7 @@ const useStyles = createStyles((theme) => ({
       whiteSpace: 'pre',
     },
   }));
-export default function AskHapi() {
+export default function AskHapi(props) {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
@@ -228,6 +242,7 @@ export default function AskHapi() {
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
+        console.log(props);
        let paid = false;
         paid = await pay();
         if (paid === false) { return; }
@@ -237,8 +252,16 @@ export default function AskHapi() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ description: userInput, previous: result }),
+            body: JSON.stringify({
+              description: userInput,
+              previous: result,
+              model: props.model,
+              temperature: props.temperature,
+              maxTokens: props.maxTokens,
+              frequencyPenalty: props.frequencyPenalty,
+              presencePenalty: props.presencePenalty }),
           });
+          return;
           const data = await response.json();
           console.log('Completion Data @ Client: ', data.completion_data);
           setResult(data.result);
@@ -256,7 +279,7 @@ export default function AskHapi() {
                     <div className={classes.content} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                         <div className={classes.imageContainer}>
                             {loading
-                                ? <Image className={classes.image} src="/hapi-error.png" />
+                                ? <Image className={classes.imageBounce} src="/hapi-error.png" />
                                 : <Image className={classes.image} src="/hapi-neutral.png" />
                             }
                         </div>
@@ -297,7 +320,13 @@ export default function AskHapi() {
                       </div>
                     </Center>
                 }
+
             </Container>
         </div>
     );
 }
+// <div> { props.model }</div>
+// <div> { props.temperature }</div>
+// <div> { props.maxTokens }</div>
+// <div> { props.frequencyPenalty }</div>
+// <div> { props.presencePenalty }</div>

@@ -6,15 +6,16 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export default async function (req, res,) {
+  console.log(req.body)
   try{
     const completion = await openai.createCompletion({
-      model: "text-davinci-003",
+      model: req.body.model,
       prompt: generatePrompt( req.body.description, req.body.previous),
-      temperature: 0.8,
-      max_tokens: 400,
+      temperature: req.body.temperature,
+      max_tokens: req.body.maxTokens,
       top_p: 1,
-      frequency_penalty: 0.0,
-      presence_penalty: 0.0
+      frequency_penalty: req.body.frequencyPenalty,
+      presence_penalty: req.body.presencePenalty
     });
     console.log('Completion Data: ', completion.data)
     let respondWith = req.body.previous ? req.body.previous + " " + completion.data.choices[0].text : completion.data.choices[0].text; 
