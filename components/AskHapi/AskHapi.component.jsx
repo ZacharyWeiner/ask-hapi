@@ -261,7 +261,6 @@ export default function AskHapi(props) {
               frequencyPenalty: props.frequencyPenalty,
               presencePenalty: props.presencePenalty }),
           });
-          return;
           const data = await response.json();
           console.log('Completion Data @ Client: ', data.completion_data);
           setResult(data.result);
