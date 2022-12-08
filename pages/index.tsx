@@ -1,8 +1,11 @@
 import Script from 'next/script';
-import Link from 'next/link';
 import { useState } from 'react';
 import { IconSettings } from '@tabler/icons';
-import { createStyles, ActionIcon, Button, Modal, Group } from '@mantine/core';
+import { createStyles, ActionIcon,
+  //Button,
+  Modal,
+  //Group
+} from '@mantine/core';
 import { Welcome } from '../components/Welcome/Welcome';
 //import { HeroBullets } from '../components/HeroWithBullets/HeroWithBullets.component';
 import AskHapi from '../components/AskHapi/AskHapi.component';

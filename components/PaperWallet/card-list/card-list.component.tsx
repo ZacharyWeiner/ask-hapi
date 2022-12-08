@@ -1,5 +1,5 @@
+import { Container } from '@mantine/core';
 import WalletCard from '../card/wallet-card.component';
-import { Container } from "@mantine/core";
 
 export default function WalletsList(props: { accounts: any; }) {
     const { accounts } = props;

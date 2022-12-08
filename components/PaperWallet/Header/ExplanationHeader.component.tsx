@@ -75,10 +75,11 @@ import {
           <div className={classes.inner}>
             <div className={classes.content}>
               <Title className={classes.title}>
-                A <span className={classes.highlight}>modern</span> BitcoinSV <br /> Paper Wallet Generator
+                A <span className={classes.highlight}>BitcoinSV</span>  <br />Paper Wallet Generator
               </Title>
               <Text color="dimmed" mt="md">
-               Create paper Wallets to Store Your BitcoinSV
+               Create paper Wallets to Store Your BitcoinSV offline
+               and without a web service wallet.
               </Text>
 
               <List
@@ -92,8 +93,9 @@ import {
                 }
               >
                 <List.Item>
-                  <b>TypeScript based</b> – build type safe applications, all components and hooks
-                  export types
+                  <b>Private Key</b> - A Private Key is used to spend your bitcoin,
+                  never share this with anyone,
+                  only use this in a trusted wallet
                 </List.Item>
                 <List.Item>
                   <b>Free and open source</b> –

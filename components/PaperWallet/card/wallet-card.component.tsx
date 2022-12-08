@@ -1,4 +1,6 @@
-import { createStyles, Card, Image, Avatar, Text, Group } from '@mantine/core';
+import { createStyles, Card,
+    //Image, Avatar,
+        Text, Group } from '@mantine/core';
 import QRCode from 'react-qr-code';
 
 const useStyles = createStyles((theme) => ({
@@ -28,7 +30,10 @@ const useStyles = createStyles((theme) => ({
 //   };
 // }
 
-export default function WalletCard(props) {
+export default function WalletCard(props: { account: {
+                                                address: string ;
+                                                pubKey: string ;
+                                                pk: string; }; }) {
   const { classes } = useStyles();
   return (
     <Card withBorder radius="md" p={0} className={classes.card}>
