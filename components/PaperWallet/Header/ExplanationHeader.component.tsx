@@ -1,3 +1,4 @@
+//import { useState, useEffect } from 'react';
 import {
     createStyles,
     Image,
@@ -63,12 +64,8 @@ import {
     },
   }));
 
-  export function ExplainationHeader() {
+  export function ExplainationHeader(props: any) {
     const { classes } = useStyles();
-    function onClickHandler(e:React.MouseEvent<HTMLElement>) {
-      console.log(e.target);
-      return e;
-    }
     return (
       <div>
         <Container>
@@ -93,31 +90,38 @@ import {
                 }
               >
                 <List.Item>
-                  <b>Private Key</b> - A Private Key is used to spend your bitcoin,
-                  never share this with anyone,
-                  only use this in a trusted wallet
+                  <b>The Most Secure</b> - Paper wallets are the most secure wallet.
+                  If you never import your private key, it will never be exposed.
                 </List.Item>
                 <List.Item>
-                  <b>Public Key</b> –
-                   Used to prove that signatures came from someone with control of the Private Key
+                  <b>Create Offline</b> –
+                   Once this page is loaded you can turn off your WIFI & Cell network.
+                   After turning off your network
+                   (or going into airplane mode) you can generate the wallets.
+                   Save a screenshot of the page & clear the list.
+                   Then turn WIFI back on.
+                   Your wallets were created offline, and all evidence
+                   on the website was destroyed before you cameback online
                 </List.Item>
                 <List.Item>
-                  <b>No annoying focus ring</b> –
-                   focus ring will appear only when user navigates with
-                   keyboard
+                  <b>No Seed Just Keys</b> –
+                   If you generate keys from a seed.
+                   exposing your seed will expose all the private keys generated from that seed.
+                   This paper wallet generates 10 random
+                   private key so that no one cantrace them back to one origin.
                 </List.Item>
               </List>
 
               <Group mt={30}>
-                <Button radius="xl" size="md" className={classes.control}>
-                  Get started
+                <Button radius="xl" size="md" variant="gradient" className={classes.control} onClick={props.onClickHandler}>
+                  Create
                 </Button>
-                <Button onClick={onClickHandler} variant="gradient" radius="xl" size="md" className={classes.control}>
+                {/* <Button onClick={props.onClickHandler}  radius="xl" size="md" className={classes.control}>
                   Source code
-                </Button>
+                </Button> */}
               </Group>
             </div>
-            <Image src="https://slavettes-layers.s3.amazonaws.com/pewnicorns/Poo-transparent.png" className={classes.image} radius="xl" />
+            <Image src="hapi-neutral.png" className={classes.image} radius="xl" />
           </div>
         </Container>
       </div>

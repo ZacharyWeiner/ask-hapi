@@ -5,6 +5,7 @@ import { Button } from '@mantine/core';
 import { ExplainationHeader } from '../components/PaperWallet/Header/ExplanationHeader.component';
 import WalletsList from '../components/PaperWallet/card-list/card-list.component';
 
+declare const window: any;
 export default function PaperWallet() {
     const [accounts, setAccounts] = useState([]);
     function createKeys() {
@@ -46,9 +47,8 @@ export default function PaperWallet() {
 
     return (<>
                 <Link href="/"> &lt; Back </Link>
-                <ExplainationHeader />
+                <ExplainationHeader onClickHandler={createKeys} />
                 <WalletsList accounts={accounts} />
-                <Button onClick={createKeys}>Create </Button>
                 <Script src="https://unpkg.com/bsv@1.5.6" />
                 <Script src="https://unpkg.com/bsv@1.5.6/bsv-message.min.js" />
                 <Script src="https://unpkg.com/bsv@1.5.6/bsv-mnemonic.min.js" />
