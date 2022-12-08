@@ -75,12 +75,10 @@ import {
           <div className={classes.inner}>
             <div className={classes.content}>
               <Title className={classes.title}>
-                A <span className={classes.highlight}>modern</span> React <br /> components library
+                A <span className={classes.highlight}>modern</span> BitcoinSV <br /> Paper Wallet Generator
               </Title>
               <Text color="dimmed" mt="md">
-                Build fully functional accessible web applications faster than ever –
-                Mantine includes
-                more than 120 customizable components and hooks to cover you in any situation
+               Create paper Wallets to Store Your BitcoinSV
               </Text>
 
               <List
