@@ -1,9 +1,9 @@
 import Script from 'next/script';
+import Link from 'next/link';
 import { useState } from 'react';
 import { IconSettings } from '@tabler/icons';
 import { createStyles, ActionIcon, Button, Modal, Group } from '@mantine/core';
 import { Welcome } from '../components/Welcome/Welcome';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 //import { HeroBullets } from '../components/HeroWithBullets/HeroWithBullets.component';
 import AskHapi from '../components/AskHapi/AskHapi.component';
 import WalletDetection from '../components/WalletDetection/WalletDetection.component';
@@ -44,7 +44,6 @@ export default function HomePage() {
   return (
     <div>
       <div className={classes.inner}>
-        <ColorSchemeToggle />
         <WalletDetection />
         <ActionIcon
           onClick={() => setOpened(true)}

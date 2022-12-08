@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Container, Text, NumberInput, Slider } from '@mantine/core';
 // import { useEffect, useState } from 'react';
 import ModelSelection from './ModelSelection/ModelSelection.component';
+import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 
 const data = [
     {
@@ -39,6 +40,7 @@ export default function Settings(props:any) {
     return (
         <div>
             <Container>
+                <ColorSchemeToggle />
                 <div> Model: { props.model }</div>
                 <ModelSelection
                   data={data}

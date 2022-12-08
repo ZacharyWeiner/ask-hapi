@@ -37,7 +37,8 @@
     "next": "12.3.1",
     "openai": "^3.1.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-qr-code": "^2.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
