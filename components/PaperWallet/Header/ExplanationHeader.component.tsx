@@ -98,9 +98,8 @@ import {
                   only use this in a trusted wallet
                 </List.Item>
                 <List.Item>
-                  <b>Free and open source</b> –
-                   all packages have MIT license, you can use Mantine in
-                   any project
+                  <b>Public Key</b> –
+                   Used to prove that signatures came from someone with control of the Private Key
                 </List.Item>
                 <List.Item>
                   <b>No annoying focus ring</b> –

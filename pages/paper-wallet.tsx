@@ -18,7 +18,9 @@ export default function PaperWallet() {
             // let path = `m/44'/0'/1'/${x}/0`;
             // const derivedChild = hd.deriveChild(path).privateKey.toString();
             //console.log(path, derivedChild);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { bsv } = window;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { nimble } = window;
             const privateKey = nimble.PrivateKey.fromRandom();
             const account = { pk: privateKey.toString(),
