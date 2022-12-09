@@ -278,8 +278,8 @@ export default function AskHapi(props) {
                     <div className={classes.content} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                         <div className={classes.imageContainer}>
                             {loading
-                                ? <Image className={classes.imageBounce} src="/hapi-error.png" />
-                                : <Image className={classes.image} src="/hapi-neutral.png" />
+                                ? <Image className={classes.imageBounce} src="/hapi-error.png" loading="lazy" />
+                                : <Image className={classes.image} src="/hapi-neutral.png" loading="lazy" />
                             }
                         </div>
                     </div>

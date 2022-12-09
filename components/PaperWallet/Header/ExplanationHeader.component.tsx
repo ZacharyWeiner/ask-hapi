@@ -121,7 +121,7 @@ import {
                 </Button> */}
               </Group>
             </div>
-            <Image src="hapi-neutral.png" className={classes.image} radius="xl" />
+            <Image src="/hapi-neutral.png" className={classes.image} radius="xl" />
           </div>
         </Container>
       </div>

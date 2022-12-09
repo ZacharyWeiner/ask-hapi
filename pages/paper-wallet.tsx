@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Script from 'next/script';
-import Link from 'next/link';
+import { IconArrowLeftBar} from '@tabler/icons';
+// import Link from 'next/link';
 import { Button } from '@mantine/core';
 import { ExplainationHeader } from '../components/PaperWallet/Header/ExplanationHeader.component';
 import WalletsList from '../components/PaperWallet/card-list/card-list.component';
@@ -47,7 +48,30 @@ export default function PaperWallet() {
     //   console.log(run.purse.address);
 
     return (<>
-                <Link href="/"> &lt; Back </Link>
+                    <Button
+                      component="a"
+                      href="/"
+                      leftIcon={<IconArrowLeftBar size={18} />}
+                      styles={(theme) => ({
+                            root: {
+                            backgroundColor: '#00acee',
+                            border: 0,
+                            height: 42,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+
+                            '&:hover': {
+                                backgroundColor: theme.fn.darken('#00acee', 0.05),
+                            },
+                            },
+
+                            leftIcon: {
+                            marginRight: 15,
+                            },
+                        })}
+                    >
+                        Back To Home
+                    </Button>
                 <ExplainationHeader onClickHandler={createKeys} />
                 <WalletsList accounts={accounts} />
                 <Script src="https://unpkg.com/bsv@1.5.6" />
