@@ -7,21 +7,21 @@ import WalletsList from '../components/PaperWallet/card-list/card-list.component
 
 declare const window: any;
 export default function PaperWallet() {
-    const [accounts, setAccounts] = useState([]);
+    const [accounts, setAccounts] = useState<Array<Object>>([]);
     function createKeys() {
         // const mnemonic = new window.bsvMnemonic(window.bsvMnemonic.Words.ENGLISH);
         // console.log({ mnemonic });
         // // eslint-disable-next-line new-cap
         // const hd = new window.bsvMnemonic(mnemonic.toString()).toHDPrivateKey();
         // console.log(hd);
-
+        const accountsHolder = [];
+        // eslint-disable-next-line no-plusplus
         for (let x = 0; x < 10; x++) {
             // let path = `m/44'/0'/1'/${x}/0`;
             // const derivedChild = hd.deriveChild(path).privateKey.toString();
             //console.log(path, derivedChild);
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { bsv } = window;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { nimble } = window;
             const privateKey = nimble.PrivateKey.fromRandom();
             const account = { pk: privateKey.toString(),
@@ -29,8 +29,9 @@ export default function PaperWallet() {
                             address: privateKey.toAddress().toString(),
                         };
             console.log(account);
-            setAccounts((arr: any) => [...arr, account]);
+            accountsHolder.push(account);
         }
+        setAccounts(accountsHolder);
     }
 
     //     const runOwner = hd.deriveChild("m/44'/666'/0'/2/0").privateKey.toString();
