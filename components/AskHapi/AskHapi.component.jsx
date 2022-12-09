@@ -214,7 +214,7 @@ export default function AskHapi(props) {
         }
       }
       try {
-        const response = await w.relayone.send({ to: '1NVZHRegc5nYXBthaZ51FfX5MYY1D8m4er', amount: 0.04, currency: 'USD' });
+        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: 0.04, currency: 'USD' });
         console.log('Relay Payment Response', response);
         paid = true;
       } catch (error) {
