@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Script from 'next/script';
-import { IconArrowLeftBar} from '@tabler/icons';
+import { IconArrowLeftBar } from '@tabler/icons';
 // import Link from 'next/link';
 import { Button } from '@mantine/core';
 import { ExplainationHeader } from '../components/PaperWallet/Header/ExplanationHeader.component';
@@ -59,6 +59,8 @@ export default function PaperWallet() {
                             height: 42,
                             paddingLeft: 20,
                             paddingRight: 20,
+                            marginLeft: 12,
+                            marginTop: 12,
 
                             '&:hover': {
                                 backgroundColor: theme.fn.darken('#00acee', 0.05),

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Container, Text, NumberInput, Slider } from '@mantine/core';
+import { Container, Button, Text, NumberInput, Slider } from '@mantine/core';
 // import { useEffect, useState } from 'react';
+import {IconWallet } from '@tabler/icons';
 import ModelSelection from './ModelSelection/ModelSelection.component';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
 
@@ -90,7 +91,35 @@ export default function Settings(props:any) {
                     />
                 </Container>
             </Container>
+            <Container>
+            <Button
+              component="a"
+              href="/paper-wallet"
+              leftIcon={<IconWallet size={18} />}
+              variant="gradient"
+              styles={(theme) => ({
+                            root: {
+                            border: 0,
+                            height: 42,
+                            background: theme.fn.linearGradient(45, 'red', 'blue'),
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            marginLeft: 12,
+                            marginTop: 36,
+                            width: '100%',
+                            '&:hover': {
+                                backgroundColor: theme.fn.darken('#00acee', 0.05),
+                            },
+                            },
 
+                            leftIcon: {
+                            marginRight: 15,
+                            },
+                        })}
+            >
+                        I NEED PAPER WALLETS
+            </Button>
+            </Container>
         </div>
     );
 }

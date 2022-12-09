@@ -114,7 +114,7 @@ import {
 
               <Group mt={30}>
                 <Button radius="xl" size="md" variant="gradient" className={classes.control} onClick={props.onClickHandler}>
-                  Create
+                  HAPI Make My Paper Wallets
                 </Button>
                 {/* <Button onClick={props.onClickHandler}  radius="xl" size="md" className={classes.control}>
                   Source code
