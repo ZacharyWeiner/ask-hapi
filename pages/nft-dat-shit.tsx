@@ -87,7 +87,7 @@ const useStyles = createStyles((theme) => ({
     },
   }));
 
-export default function AskHapi(props) {
+export default function NFTDat() {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState([]);
@@ -246,7 +246,6 @@ export default function AskHapi(props) {
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
-        console.log(props);
       //  const paid = true;
       //   //paid = await pay();
       //   //if (paid === false) { return; }
