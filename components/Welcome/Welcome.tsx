@@ -1,7 +1,7 @@
 import { Title, Text } from '@mantine/core';
 import useStyles from './Welcome.styles';
 
-export function Welcome() {
+export function Welcome(props) {
   const { classes } = useStyles();
 
   return (
@@ -13,7 +13,7 @@ export function Welcome() {
         </Text>
       </Title>
       <Text color="dimmed" align="center" size="lg" sx={{ maxWidth: 580 }} mx="auto" mt="xl">
-        Ask HAPI to write, or answer anything.
+        {props.subtext}
          {/* For some ideas{' '}
         <Anchor href="https://mantine.dev/guides/next/" size="lg">
            click here

@@ -1,6 +1,9 @@
+import Script from 'next/script';
 import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { Welcome } from '../components/Welcome/Welcome';
+import { IconArrowBack } from '@tabler/icons';
 
 export const bounce = keyframes({
   'from, 20%, 53%, 80%, to': { transform: 'translate3d(0, 0, 0)' },
@@ -202,6 +205,7 @@ export default function NFTDat() {
     async function payWithRelay() {
       // eslint-disable-next-line no-undef
       const w = window;
+      console.log(w);
       let paid = false;
       if (!relayPaymail) {
         try {
@@ -214,7 +218,7 @@ export default function NFTDat() {
           //if (data.origin !== "yourdomain.com") throw new Error();
         } catch (err) {
           // eslint-disable-next-line no-alert
-          alert('could not log in.');
+          alert('could not log in.', err);
         }
       }
       try {
@@ -246,28 +250,25 @@ export default function NFTDat() {
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
-      //  const paid = true;
-      //   //paid = await pay();
-      //   //if (paid === false) { return; }
-      //   try {
-      //     const response = await fetch('/api/generateImageSD', {
-      //       method: 'POST',
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //       body: JSON.stringify({
-      //         prompt: userInput,
-      //       }),
-      //     });
-      //     const data = await response.json();
-      //     console.log('Completion Data @ Client: ', data.data.data);
-      //   // setResult(data.data.data);
-      //   //   setDataFinishReason(data.finish_reason);
-      //   setLoading(false);
-      //   } catch (err) {
-      //     console.log('Error Generating A Response:', err);
-      //     alert('Error Generating A Response:', err);
-
+        let paid = false;
+        paid = await pay();
+        if (paid === false) { return; }
+        try {
+          const response = await fetch('/api/generateImageSD', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              prompt: userInput,
+            }),
+          });
+          const data = await response.json();
+          console.log('Completion Data @ Client: ', data);
+        } catch (err) {
+          console.log('Error Generating A Response:', err);
+          alert('Error Generating A Response:', err);
+        }
       const response = await fetch('/api/predictions', {
         method: 'POST',
         headers: {
@@ -284,7 +285,6 @@ export default function NFTDat() {
         return;
       }
       setPrediction(prediction);
-
       while (
         _prediction.status !== 'succeeded' &&
         _prediction.status !== 'failed'
@@ -301,9 +301,24 @@ export default function NFTDat() {
         }
         setPrediction(_prediction);
       }
+      setLoading(false);
+    }
+
+    async function generateNFT() {
+      const response = await fetch('/api/generateNFT', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: userInput,
+        }),
+      });
+      return response;
     }
     return (
         <div>
+          <Welcome subtext="Describe the Picture in as much detail as possible" />
             <Container>
                 <div className={classes.inner}>
                     <div className={classes.content} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
@@ -315,6 +330,34 @@ export default function NFTDat() {
                         </div>
                     </div>
                 </div>
+                <Center>
+                  <Button
+                    component="a"
+                    href="/"
+                    leftIcon={<IconArrowBack size={18} />}
+                    styles={(theme: { fn: { darken: (arg0: string, arg1: number) => any; }; }) => ({
+                                        root: {
+                                        backgroundColor: '#00acee',
+                                        border: 0,
+                                        height: 42,
+                                        paddingLeft: 20,
+                                        paddingRight: 20,
+                                        marginLeft: 12,
+                                        marginTop: 12,
+
+                                        '&:hover': {
+                                            backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                        },
+                                        },
+
+                                        leftIcon: {
+                                        marginRight: 15,
+                                        },
+                                    })}
+                  >
+                                    Home
+                  </Button>
+                </Center>
                 <div>
                   <Textarea
                     onChange={onTextChanged}
@@ -325,7 +368,7 @@ export default function NFTDat() {
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
-                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI 40¢</Button>
+                              <Button variant="gradient" onClick={generateResponse}>Make Picture 4¢</Button>
                           </div>
                       </Center>
                   </div>
@@ -357,13 +400,13 @@ export default function NFTDat() {
                         )}
                       </div>
                     )}
-                {
-                  (result?.length < 1)
+                {/* {
+                  (!prediction)
                   ? ''
                   : <Center>
                       { dataFinishReason !== 'stop'
                       ? <div style={{ margin: '12px' }}>
-                            <Button variant="gradient" onClick={generateResponse}>Continue 4¢</Button>
+                            <Button variant="gradient" onClick={generateNFT}>Make NFT</Button>
                         </div>
                         : ''
                       }
@@ -371,9 +414,10 @@ export default function NFTDat() {
                           <Button variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }} onClick={resetPrompt}>Reset</Button>
                       </div>
                     </Center>
-                }
+                } */}
 
             </Container>
+            <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );
 }

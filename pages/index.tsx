@@ -1,9 +1,10 @@
 import Script from 'next/script';
 import { useState } from 'react';
-import { IconSettings } from '@tabler/icons';
+import { IconSettings, IconPhoto } from '@tabler/icons';
 import { createStyles, ActionIcon,
-  //Button,
+  Button,
   Modal,
+  Center,
   //Group
 } from '@mantine/core';
 import { Welcome } from '../components/Welcome/Welcome';
@@ -55,7 +56,35 @@ export default function HomePage() {
           <IconSettings size={20} stroke={1.5} />
         </ActionIcon>
       </div>
-      <Welcome />
+      <Welcome subtext="Ask HAPI to write, or answer anything." />
+      <Center>
+      <Button
+        component="a"
+        href="/images"
+        leftIcon={<IconPhoto size={18} />}
+        styles={(theme: { fn: { darken: (arg0: string, arg1: number) => any; }; }) => ({
+                            root: {
+                            backgroundColor: '#00acee',
+                            border: 0,
+                            height: 42,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            marginLeft: 12,
+                            marginTop: 12,
+
+                            '&:hover': {
+                                backgroundColor: theme.fn.darken('#00acee', 0.05),
+                            },
+                            },
+
+                            leftIcon: {
+                            marginRight: 15,
+                            },
+                        })}
+      >
+                        Or Make A Picture
+      </Button>
+      </Center>
       <AskHapi
         model={model}
         temperature={temperature}
