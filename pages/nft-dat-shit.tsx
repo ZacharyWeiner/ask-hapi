@@ -86,17 +86,21 @@ const useStyles = createStyles((theme) => ({
       whiteSpace: 'pre',
     },
   }));
+
 export default function AskHapi(props) {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState('');
+    const [result, setResult] = useState([]);
     const [userInput, setUserInput] = useState('Create a list of 5 reasons to love TV');
     const [prompt, setPrompt] = useState();
     const [dataFinishReason, setDataFinishReason] = useState();
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
     const [relayPaymail, setRelayPaymail] = useState('');
-
+    const [prediction, setPrediction] = useState<Object>([]);
+    const [error, setError] = useState(null);
+    // eslint-disable-next-line no-promise-executor-return
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
       // eslint-disable-next-line no-undef
       const w = window;
@@ -243,33 +247,61 @@ export default function AskHapi(props) {
         event.preventDefault();
         setLoading(true);
         console.log(props);
-       let paid = false;
-        paid = await pay();
-        if (paid === false) { return; }
-        try {
-          const response = await fetch('/api/generateStory', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              description: userInput,
-              previous: result,
-              model: props.model,
-              temperature: props.temperature,
-              maxTokens: props.maxTokens,
-              frequencyPenalty: props.frequencyPenalty,
-              presencePenalty: props.presencePenalty }),
-          });
-          const data = await response.json();
-          console.log('Completion Data @ Client: ', data.completion_data);
-          setResult(data.result);
-          setDataFinishReason(data.finish_reason);
-          setLoading(false);
-        } catch (err) {
-          console.log('Error Generating A Response:', err);
-          alert('Error Generating A Response:', err);
+      //  const paid = true;
+      //   //paid = await pay();
+      //   //if (paid === false) { return; }
+      //   try {
+      //     const response = await fetch('/api/generateImageSD', {
+      //       method: 'POST',
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //       body: JSON.stringify({
+      //         prompt: userInput,
+      //       }),
+      //     });
+      //     const data = await response.json();
+      //     console.log('Completion Data @ Client: ', data.data.data);
+      //   // setResult(data.data.data);
+      //   //   setDataFinishReason(data.finish_reason);
+      //   setLoading(false);
+      //   } catch (err) {
+      //     console.log('Error Generating A Response:', err);
+      //     alert('Error Generating A Response:', err);
+
+      const response = await fetch('/api/predictions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: userInput,
+        }),
+      });
+      let _prediction = await response.json();
+      console.log(_prediction);
+      if (response.status !== 201) {
+        setError(_prediction.detail);
+        return;
+      }
+      setPrediction(prediction);
+
+      while (
+        _prediction.status !== 'succeeded' &&
+        _prediction.status !== 'failed'
+      ) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(1000);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const response = await fetch(`/api/predictions/${_prediction.id}`);
+        // eslint-disable-next-line no-await-in-loop
+        _prediction = await response.json();
+        if (response.status !== 200) {
+          setError(_prediction.detail);
+          return;
         }
+        setPrediction(_prediction);
+      }
     }
     return (
         <div>
@@ -294,18 +326,40 @@ export default function AskHapi(props) {
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
-                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI 4¢</Button>
+                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI 40¢</Button>
                           </div>
                       </Center>
                   </div>
                 </div>
-                {
-                  (result) === ''
+                {/* {
+                  (result?.length < 1)
                   ? ''
-                  : <Text className={classes.results} style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre-wrap' }}> {result} </Text>
-                }
+                  : <Center>
+                        {result.map((item:any) => (<Image
+                          src={item.url}
+                          style={{ maxHeight: 256, maxWidth: 256 }}
+                        />))}
+                    </Center>
+                } */}
+                      {error && <div>{error}</div>}
+
+                    {prediction && (
+                      <div>
+                        <p>{prediction.status === 'succeeded' ? '' : prediction.status }</p>
+                        {prediction.output && (
+                          <Center>
+                            <Image
+                              src={prediction.output[prediction.output.length - 1]}
+                              alt="output"
+                              width={500}
+                              height={500}
+                            />
+                          </Center>
+                        )}
+                      </div>
+                    )}
                 {
-                  (result) === ''
+                  (result?.length < 1)
                   ? ''
                   : <Center>
                       { dataFinishReason !== 'stop'
