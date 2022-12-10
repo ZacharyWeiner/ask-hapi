@@ -100,10 +100,10 @@ export default function NFTDat() {
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
     const [relayPaymail, setRelayPaymail] = useState('');
-    const [prediction, setPrediction] = useState<Object>([]);
+    const [prediction, setPrediction] = useState([]);
     const [error, setError] = useState(null);
     // eslint-disable-next-line no-promise-executor-return
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
       // eslint-disable-next-line no-undef
       const w = window;
@@ -304,18 +304,18 @@ export default function NFTDat() {
       setLoading(false);
     }
 
-    async function generateNFT() {
-      const response = await fetch('/api/generateNFT', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: userInput,
-        }),
-      });
-      return response;
-    }
+    // async function generateNFT() {
+    //   const response = await fetch('/api/generateNFT', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       prompt: userInput,
+    //     }),
+    //   });
+    //   return response;
+    // }
     return (
         <div>
           <Welcome subtext="Describe the Picture in as much detail as possible" />
@@ -335,7 +335,7 @@ export default function NFTDat() {
                     component="a"
                     href="/"
                     leftIcon={<IconArrowBack size={18} />}
-                    styles={(theme: { fn: { darken: (arg0: string, arg1: number) => any; }; }) => ({
+                    styles={(theme) => ({
                                         root: {
                                         backgroundColor: '#00acee',
                                         border: 0,

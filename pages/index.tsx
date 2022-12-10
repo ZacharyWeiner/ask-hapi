@@ -7,7 +7,7 @@ import { createStyles, ActionIcon,
   Center,
   //Group
 } from '@mantine/core';
-import { Welcome } from '../components/Welcome/Welcome';
+import Welcome from '../components/Welcome/Welcome';
 //import { HeroBullets } from '../components/HeroWithBullets/HeroWithBullets.component';
 import AskHapi from '../components/AskHapi/AskHapi.component';
 import WalletDetection from '../components/WalletDetection/WalletDetection.component';
