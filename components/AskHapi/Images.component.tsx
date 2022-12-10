@@ -1,6 +1,9 @@
+import Script from 'next/script';
 import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import Welcome from './../Welcome/Welcome.tsx'
+import { IconArrowBack } from '@tabler/icons';
 
 export const bounce = keyframes({
   'from, 20%, 53%, 80%, to': { transform: 'translate3d(0, 0, 0)' },
@@ -86,17 +89,21 @@ const useStyles = createStyles((theme) => ({
       whiteSpace: 'pre',
     },
   }));
-export default function AskHapi(props) {
+
+export default function NFTDat() {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState('');
+    const [result, setResult] = useState([]);
     const [userInput, setUserInput] = useState('Create a list of 5 reasons to love TV');
     const [prompt, setPrompt] = useState();
     const [dataFinishReason, setDataFinishReason] = useState();
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
     const [relayPaymail, setRelayPaymail] = useState('');
-
+    const [prediction, setPrediction] = useState<Object>([]);
+    const [error, setError] = useState(null);
+    // eslint-disable-next-line no-promise-executor-return
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
       // eslint-disable-next-line no-undef
       const w = window;
@@ -198,6 +205,7 @@ export default function AskHapi(props) {
     async function payWithRelay() {
       // eslint-disable-next-line no-undef
       const w = window;
+      console.log(w);
       let paid = false;
       if (!relayPaymail) {
         try {
@@ -210,7 +218,7 @@ export default function AskHapi(props) {
           //if (data.origin !== "yourdomain.com") throw new Error();
         } catch (err) {
           // eslint-disable-next-line no-alert
-          alert('could not log in.');
+          alert('could not log in.', err);
         }
       }
       try {
@@ -242,37 +250,75 @@ export default function AskHapi(props) {
     async function generateResponse(event) {
         event.preventDefault();
         setLoading(true);
-        console.log(props);
-       let paid = false;
+        let paid = false;
         paid = await pay();
         if (paid === false) { return; }
         try {
-          const response = await fetch('/api/generateStory', {
+          const response = await fetch('/api/generateImageSD', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              description: userInput,
-              previous: result,
-              model: props.model,
-              temperature: props.temperature,
-              maxTokens: props.maxTokens,
-              frequencyPenalty: props.frequencyPenalty,
-              presencePenalty: props.presencePenalty }),
+              prompt: userInput,
+            }),
           });
           const data = await response.json();
-          console.log('Completion Data @ Client: ', data.completion_data);
-          setResult(data.result);
-          setDataFinishReason(data.finish_reason);
-          setLoading(false);
+          console.log('Completion Data @ Client: ', data);
         } catch (err) {
           console.log('Error Generating A Response:', err);
           alert('Error Generating A Response:', err);
         }
+      const response = await fetch('/api/predictions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: userInput,
+        }),
+      });
+      let _prediction = await response.json();
+      console.log(_prediction);
+      if (response.status !== 201) {
+        setError(_prediction.detail);
+        return;
+      }
+      setPrediction(prediction);
+      while (
+        _prediction.status !== 'succeeded' &&
+        _prediction.status !== 'failed'
+      ) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(1000);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const response = await fetch(`/api/predictions/${_prediction.id}`);
+        // eslint-disable-next-line no-await-in-loop
+        _prediction = await response.json();
+        if (response.status !== 200) {
+          setError(_prediction.detail);
+          return;
+        }
+        setPrediction(_prediction);
+      }
+      setLoading(false);
+    }
+
+    async function generateNFT() {
+      const response = await fetch('/api/generateNFT', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: userInput,
+        }),
+      });
+      return response;
     }
     return (
         <div>
+          <Welcome subtext="Describe the Picture in as much detail as possible" />
             <Container>
                 <div className={classes.inner}>
                     <div className={classes.content} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
@@ -284,6 +330,34 @@ export default function AskHapi(props) {
                         </div>
                     </div>
                 </div>
+                <Center>
+                  <Button
+                    component="a"
+                    href="/"
+                    leftIcon={<IconArrowBack size={18} />}
+                    styles={(theme: { fn: { darken: (arg0: string, arg1: number) => any; }; }) => ({
+                                        root: {
+                                        backgroundColor: '#00acee',
+                                        border: 0,
+                                        height: 42,
+                                        paddingLeft: 20,
+                                        paddingRight: 20,
+                                        marginLeft: 12,
+                                        marginTop: 12,
+
+                                        '&:hover': {
+                                            backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                        },
+                                        },
+
+                                        leftIcon: {
+                                        marginRight: 15,
+                                        },
+                                    })}
+                  >
+                                    Home
+                  </Button>
+                </Center>
                 <div>
                   <Textarea
                     onChange={onTextChanged}
@@ -294,23 +368,45 @@ export default function AskHapi(props) {
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
-                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI 4¢</Button>
+                              <Button variant="gradient" onClick={generateResponse}>Make Picture 4¢</Button>
                           </div>
                       </Center>
                   </div>
                 </div>
-                {
-                  (result) === ''
+                {/* {
+                  (result?.length < 1)
                   ? ''
-                  : <Text className={classes.results} style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre-wrap' }}> {result} </Text>
-                }
-                {
-                  (result) === ''
+                  : <Center>
+                        {result.map((item:any) => (<Image
+                          src={item.url}
+                          style={{ maxHeight: 256, maxWidth: 256 }}
+                        />))}
+                    </Center>
+                } */}
+                      {error && <div>{error}</div>}
+
+                    {prediction && (
+                      <div>
+                        <p>{prediction.status === 'succeeded' ? '' : prediction.status }</p>
+                        {prediction.output && (
+                          <Center>
+                            <Image
+                              src={prediction.output[prediction.output.length - 1]}
+                              alt="output"
+                              width={500}
+                              height={500}
+                            />
+                          </Center>
+                        )}
+                      </div>
+                    )}
+                {/* {
+                  (!prediction)
                   ? ''
                   : <Center>
                       { dataFinishReason !== 'stop'
                       ? <div style={{ margin: '12px' }}>
-                            <Button variant="gradient" onClick={generateResponse}>Continue 4¢</Button>
+                            <Button variant="gradient" onClick={generateNFT}>Make NFT</Button>
                         </div>
                         : ''
                       }
@@ -318,9 +414,10 @@ export default function AskHapi(props) {
                           <Button variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }} onClick={resetPrompt}>Reset</Button>
                       </div>
                     </Center>
-                }
+                } */}
 
             </Container>
+            <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );
 }

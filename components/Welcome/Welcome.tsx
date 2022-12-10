@@ -1,7 +1,7 @@
 import { Title, Text } from '@mantine/core';
 import useStyles from './Welcome.styles';
 
-export function Welcome(props:any) {
+export default function Welcome(props:any) {
   const { classes } = useStyles();
 
   return (
