@@ -2,7 +2,7 @@ import Script from 'next/script';
 import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import Welcome from './../Welcome/Welcome.tsx'
+import Welcome from './../Welcome/Welcome'
 import { IconArrowBack } from '@tabler/icons';
 
 export const bounce = keyframes({
