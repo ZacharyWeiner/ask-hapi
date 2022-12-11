@@ -67,7 +67,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
               contract: 'payment',
               outputs: [{
                 to: '16015@twetch.me',
-                sats: 100000,
+                sats: 250000,
               }],
             });
         } catch (err) {
@@ -93,7 +93,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
             receivers: [
               {
                 address: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY',
-                amount: 100000,
+                amount: 250000,
               },
             ],
           });
@@ -123,7 +123,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
           }
         }
         try {
-          const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: 0.04, currency: 'USD' });
+          const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: 0.10, currency: 'USD' });
           console.log('Relay Payment Response', response);
           paid = true;
         } catch (err) {
@@ -159,7 +159,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
               body: JSON.stringify({
                 imageUrl: url,
                 scale: 8,
-                face: false,
+                face: true,
               }),
             });
             let _prediction = await response.json();
@@ -198,25 +198,29 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
             <TextInput label="Pic Link" description="the url of the image on the web" placeholder="https://replicate.delivery/pbxt/aaCxtF4kAULQHtrj7i43jvGYT3iCXP51K4UfUccqBfcXq6IQA/out-0.png" onChange={e => setUrl(e.target.value)} style={{ width: '100%' }} />
             <Button variant="gradient" style={{ marginRight: '4px' }} onClick={upgradeFace}>Upgrade Face 10¢</Button>
             <Center>
-            <Image
-              src={url}
-              alt="output"
-              width={500}
-              height={500}
-            />
-                {upscale && (
-                    <>
-                    <p>{upscale.status === 'succeeded' ? '' : upscale.status }</p>
-                    {upscale.output && (
-                        <Image
-                          src={upscale.output}
-                          alt="output"
-                          width={500}
-                          height={500}
-                        />
-                    )}
-                    </>
-                )}
+              <div>
+                <Image
+                  src={url}
+                  alt="output"
+                  width={500}
+                  height={500}
+                />
+              </div>
+            </Center>
+            <Center>
+              {upscale && (
+                  <div>
+                  <p>{upscale.status === 'succeeded' ? '' : upscale.status }</p>
+                  {upscale.output && (
+                      <Image
+                        src={upscale.output}
+                        alt="output"
+                        width={500}
+                        height={500}
+                      />
+                  )}
+                  </div>
+              )}
             </Center>
         </div>
     );
