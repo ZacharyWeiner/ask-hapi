@@ -243,65 +243,53 @@ export default function NFTDat() {
       else if (hasSensiletWallet) { paid = payWithSensilet(); } else { paid = payWithRelay(); }
       return paid;
     }
-
     function onTextChanged(e) {
         setUserInput(e.target.value);
     }
-    async function generateResponse(event) {
-        event.preventDefault();
+    async function generateResponse() {
         setLoading(true);
         let paid = false;
         paid = await pay();
         if (paid === false) { return; }
         try {
-          const response = await fetch('/api/generateImageSD', {
+          const response = await fetch('/api/predictions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               prompt: userInput,
+              version: '6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c',
             }),
           });
-          const data = await response.json();
-          console.log('Completion Data @ Client: ', data);
+          let _prediction = await response.json();
+          console.log(_prediction);
+          if (response.status !== 201) {
+            setError(_prediction.detail);
+            return;
+          }
+          setPrediction(prediction);
+          while (
+            _prediction.status !== 'succeeded' &&
+            _prediction.status !== 'failed'
+          ) {
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(1000);
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            const response = await fetch(`/api/predictions/${_prediction.id}`);
+            // eslint-disable-next-line no-await-in-loop
+            _prediction = await response.json();
+            if (response.status !== 200) {
+              setError(_prediction.detail);
+              return;
+            }
+            setPrediction(_prediction);
+          }
+          setLoading(false);
         } catch (err) {
           console.log('Error Generating A Response:', err);
           alert('Error Generating A Response:', err);
         }
-      const response = await fetch('/api/predictions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: userInput,
-        }),
-      });
-      let _prediction = await response.json();
-      console.log(_prediction);
-      if (response.status !== 201) {
-        setError(_prediction.detail);
-        return;
-      }
-      setPrediction(prediction);
-      while (
-        _prediction.status !== 'succeeded' &&
-        _prediction.status !== 'failed'
-      ) {
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(1000);
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        const response = await fetch(`/api/predictions/${_prediction.id}`);
-        // eslint-disable-next-line no-await-in-loop
-        _prediction = await response.json();
-        if (response.status !== 200) {
-          setError(_prediction.detail);
-          return;
-        }
-        setPrediction(_prediction);
-      }
-      setLoading(false);
     }
 
     // async function generateNFT() {

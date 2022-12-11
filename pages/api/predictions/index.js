@@ -9,10 +9,10 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         // Pinned to a specific version of kuprel/min-dalle, fetched from:
         // https://replicate.com/kuprel/min-dalle/versions
-        version:
-          "6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c", // - Stable Diffusion
+        version:req.body.version, 
+          //"6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c", // - Stable Diffusion
           //"3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912", // Text to Pokemon
-        input: { prompt: req.body.prompt, grid_size: 4 },
+        input: { prompt: req.body.prompt, grid_size: 1 }, 
       }),
     });
   
