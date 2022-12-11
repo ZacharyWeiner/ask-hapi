@@ -199,13 +199,13 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
             <Button variant="gradient" style={{ marginRight: '4px' }} onClick={upgradeFace}>Upgrade Face 10¢</Button>
             <Center>
             <Image
-                          src={url}
-                          alt="output"
-                          width={500}
-                          height={500}
-                        />
+              src={url}
+              alt="output"
+              width={500}
+              height={500}
+            />
                 {upscale && (
-                    <div>
+                    <>
                     <p>{upscale.status === 'succeeded' ? '' : upscale.status }</p>
                     {upscale.output && (
                         <Image
@@ -215,7 +215,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
                           height={500}
                         />
                     )}
-                    </div>
+                    </>
                 )}
             </Center>
         </div>
