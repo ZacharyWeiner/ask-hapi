@@ -1,7 +1,8 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Button, Center, Image, TextInput } from '@mantine/core';
+import { Button, Center, Image, TextInput, Video } from '@mantine/core';
 
-export default function UpgradeFaceComponent({ onLoadingChanged }) {
+export default function UpgradeFaceComponent({ onLoadingChanged, endPoint, displayType, satoshis, buttonText, defaultUrl }) {
     const [url, setUrl] = useState('');
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
@@ -10,7 +11,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
     const [error, setError] = useState(null);
     // eslint-disable-next-line no-promise-executor-return
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    useEffect(() => { setUrl('https://www.thestartupfounder.com/wp-content/uploads/2022/07/istockphoto-1199509645-612x612-1.jpg'); }, []);
+    useEffect(() => { setUrl(defaultUrl); }, []);
     useEffect(() => {
         // eslint-disable-next-line no-undef
         const w = window;
@@ -68,7 +69,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
               contract: 'payment',
               outputs: [{
                 to: '16015@twetch.me',
-                sats: 250000,
+                sats: satoshis,
               }],
             });
         } catch (err) {
@@ -94,7 +95,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
             receivers: [
               {
                 address: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY',
-                amount: 250000,
+                amount: satoshis,
               },
             ],
           });
@@ -124,7 +125,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
           }
         }
         try {
-          const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: 0.10, currency: 'USD' });
+          const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (satoshis / 100000000), currency: 'BSV' });
           console.log('Relay Payment Response', response);
           paid = true;
         } catch (err) {
@@ -146,13 +147,15 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
         return paid;
       }
 
-    async function upgradeFace() {
+    async function upgradeFace(props) {
         onLoadingChanged(true);
         let paid = false;
         paid = await pay();
         if (!paid) { return; }
+        let _endpoint = endPoint;
+        if (!_endpoint || _endpoint === '') { _endpoint = '/api/predictions/upscale'; }
         try {
-            const response = await fetch('/api/predictions/upscale', {
+            const response = await fetch(_endpoint, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -197,7 +200,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
     return (
         <div style={{ width: '100%' }}>
             <TextInput label="Pic Link" description="the url of the image on the web" placeholder="https://www.thestartupfounder.com/wp-content/uploads/2022/07/istockphoto-1199509645-612x612-1.jpg" onChange={e => setUrl(e.target.value)} style={{ width: '100%' }} />
-            <Button variant="gradient" style={{ marginRight: '4px' }} onClick={upgradeFace}>Upgrade Face 10¢</Button>
+            <Button variant="gradient" style={{ marginRight: '4px' }} onClick={upgradeFace}>{buttonText}</Button>
             <Center>
               <div>
                 <Image
@@ -210,9 +213,9 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
             </Center>
             <Center>
               {upscale && (
-                  <div>
+                <div>
                   <p>{upscale.status === 'succeeded' ? '' : upscale.status }</p>
-                  {upscale.output && (
+                  {upscale.output && displayType === 'image' && (
                       <Image
                         src={upscale.output}
                         alt="output"
@@ -220,7 +223,19 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
                         height={500}
                       />
                   )}
-                  </div>
+                  {upscale.output && displayType === 'video' && (
+                    <div>
+                    <iframe
+                      title="agedUp"
+                      width="100%"
+                      height="100%"
+                      allowFullScreen
+                      src={upscale.output}
+                    />
+                    <Link href={upscale.output} target="_blank"> View Larger </Link>
+                    </div>
+                  )}
+                </div>
               )}
             </Center>
         </div>

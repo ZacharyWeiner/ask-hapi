@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    console.log(req.body.prompt)
+    console.log(req.body)
     const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
@@ -7,14 +7,8 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // Pinned to a specific version of kuprel/min-dalle, fetched from:
-        // https://replicate.com/kuprel/min-dalle/versions
-        version:req.body.version, 
-          //"6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c", // - Stable Diffusion
-          //"7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc", // - Stable Diffusion 2
-          
-          //"3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912", // Text to Pokemon
-        input: { prompt: req.body.prompt, grid_size: 1 }, 
+        version: "e662d9732001aa4f30c86927ac39c0da6b8a371fc5391931171a6428bd34c27f",
+        input: { image: req.body.imageUrl, micromotion: "aging", scale: 8 }, 
       }),
     });
   

@@ -144,11 +144,11 @@ export default function UpgradeFace() {
             <Center>
                 <UpgradeFaceComponent
                   onLoadingChanged={setLoading}
-                  endPoint="/api/predictions/upscale"
-                  displayType="image"
-                  satoshis={250000}
-                  buttonText="Upgrade Face 10¢"
-                  defaultUrl="https://www.thestartupfounder.com/wp-content/uploads/2022/07/istockphoto-1199509645-612x612-1.jpg"
+                  endPoint="/api/predictions/age"
+                  displayType="video"
+                  satoshis={400000}
+                  buttonText="Age Face 20¢"
+                  defaultUrl="https://variety.com/wp-content/uploads/2020/10/Scarlett-Johansson.jpg?w=1000"
                 />
             </Center>
         </Container>

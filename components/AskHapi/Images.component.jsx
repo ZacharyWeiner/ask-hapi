@@ -358,7 +358,7 @@ export default function NFTDat() {
       return satsFeeBase;
     }
     async function generateStableDiffusion() {
-      setModel('6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c');
+      setModel('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc');
       setSatsFee(calculateSatsFee());
       await generateResponse();
     }
