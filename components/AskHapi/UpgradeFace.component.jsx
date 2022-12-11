@@ -10,6 +10,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
     const [error, setError] = useState(null);
     // eslint-disable-next-line no-promise-executor-return
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    useEffect(() => { setUrl('https://www.thestartupfounder.com/wp-content/uploads/2022/07/istockphoto-1199509645-612x612-1.jpg'); }, []);
     useEffect(() => {
         // eslint-disable-next-line no-undef
         const w = window;
@@ -195,7 +196,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged }) {
 
     return (
         <div style={{ width: '100%' }}>
-            <TextInput label="Pic Link" description="the url of the image on the web" placeholder="https://replicate.delivery/pbxt/aaCxtF4kAULQHtrj7i43jvGYT3iCXP51K4UfUccqBfcXq6IQA/out-0.png" onChange={e => setUrl(e.target.value)} style={{ width: '100%' }} />
+            <TextInput label="Pic Link" description="the url of the image on the web" placeholder="https://www.thestartupfounder.com/wp-content/uploads/2022/07/istockphoto-1199509645-612x612-1.jpg" onChange={e => setUrl(e.target.value)} style={{ width: '100%' }} />
             <Button variant="gradient" style={{ marginRight: '4px' }} onClick={upgradeFace}>Upgrade Face 10¢</Button>
             <Center>
               <div>
