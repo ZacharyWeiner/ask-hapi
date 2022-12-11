@@ -246,8 +246,13 @@ export default function AskHapi(props) {
        let paid = false;
         paid = await pay();
         if (paid === false) { return; }
+        let apiEndpoint = props.endPoint;
+        if (apiEndpoint === '' || !apiEndpoint) {
+          apiEndpoint = '/api/generateStory';
+        }
+        console.log(apiEndpoint);
         try {
-          const response = await fetch('/api/generateStory', {
+          const response = await fetch(apiEndpoint, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -288,13 +293,13 @@ export default function AskHapi(props) {
                   <Textarea
                     onChange={onTextChanged}
                     placeholder="What can I do for you, my human overlord?"
-                    label="Ask HAPI to create anything"
+                    label={props.labelText ? props.labelText : 'Ask HAPI to create anything'}
                     withAsterisk
                   />
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
-                              <Button variant="gradient" onClick={generateResponse}>ASK HAPI 4¢</Button>
+                              <Button variant="gradient" onClick={generateResponse}>{props.buttonText ? props.buttonText : 'Ask Hapi'} 4¢</Button>
                           </div>
                       </Center>
                   </div>

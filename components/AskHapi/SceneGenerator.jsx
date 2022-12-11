@@ -1,9 +1,6 @@
-import Script from 'next/script';
 import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { IconArrowBack } from '@tabler/icons';
-import Welcome from '../Welcome/Welcome';
 
 export const bounce = keyframes({
   'from, 20%, 53%, 80%, to': { transform: 'translate3d(0, 0, 0)' },
@@ -89,26 +86,17 @@ const useStyles = createStyles((theme) => ({
       whiteSpace: 'pre',
     },
   }));
-
-export default function NFTDat() {
+export default function AskHapi(props) {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState([]);
+    const [result, setResult] = useState('');
     const [userInput, setUserInput] = useState('Create a list of 5 reasons to love TV');
     const [prompt, setPrompt] = useState();
     const [dataFinishReason, setDataFinishReason] = useState();
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
     const [hasSensiletWallet, setHasSensiletWallet] = useState(false);
     const [relayPaymail, setRelayPaymail] = useState('');
-    const [prediction, setPrediction] = useState([]);
-    const [upscale, setUpscale] = useState([]);
-    const [error, setError] = useState(null);
-    const [model, setModel] = useState('6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c');
-    const [satsFee, setSatsFee] = useState(100000);
-    const [satsFeeBase, setSatsFeeBase] = useState(100000);
-    const [previousImages, setPreviousImages] = useState([]);
-    // eslint-disable-next-line no-promise-executor-return
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
     useEffect(() => {
       // eslint-disable-next-line no-undef
       const w = window;
@@ -170,7 +158,7 @@ export default function NFTDat() {
             contract: 'payment',
             outputs: [{
               to: '16015@twetch.me',
-              sats: satsFee,
+              sats: 100000,
             }],
           });
       } catch (err) {
@@ -196,7 +184,7 @@ export default function NFTDat() {
           receivers: [
             {
               address: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY',
-              amount: satsFee,
+              amount: 100000,
             },
           ],
         });
@@ -210,7 +198,6 @@ export default function NFTDat() {
     async function payWithRelay() {
       // eslint-disable-next-line no-undef
       const w = window;
-      console.log(w);
       let paid = false;
       if (!relayPaymail) {
         try {
@@ -223,11 +210,11 @@ export default function NFTDat() {
           //if (data.origin !== "yourdomain.com") throw new Error();
         } catch (err) {
           // eslint-disable-next-line no-alert
-          alert('could not log in.', err);
+          alert('could not log in.');
         }
       }
       try {
-        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (satsFee / 100000000), currency: 'BSV' });
+        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: 0.04, currency: 'USD' });
         console.log('Relay Payment Response', response);
         paid = true;
       } catch (error) {
@@ -248,141 +235,44 @@ export default function NFTDat() {
       else if (hasSensiletWallet) { paid = payWithSensilet(); } else { paid = payWithRelay(); }
       return paid;
     }
+
     function onTextChanged(e) {
         setUserInput(e.target.value);
     }
-    async function generateResponse() {
+    async function generateResponse(event) {
+        event.preventDefault();
         setLoading(true);
-        let paid = false;
+        console.log(props);
+       let paid = false;
         paid = await pay();
         if (paid === false) { return; }
         try {
-          const response = await fetch('/api/predictions', {
+          const response = await fetch('/api/generateStory', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              prompt: userInput,
-              version: model,
-            }),
+              description: userInput,
+              previous: result,
+              model: props.model,
+              temperature: props.temperature,
+              maxTokens: props.maxTokens,
+              frequencyPenalty: props.frequencyPenalty,
+              presencePenalty: props.presencePenalty }),
           });
-          let _prediction = await response.json();
-          console.log(_prediction);
-          if (response.status !== 201) {
-            setError(_prediction.detail);
-            return;
-          }
-          setPrediction(prediction);
-          while (
-            _prediction.status !== 'succeeded' &&
-            _prediction.status !== 'failed'
-          ) {
-            // eslint-disable-next-line no-await-in-loop
-            await sleep(1000);
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            const response = await fetch(`/api/predictions/${_prediction.id}`);
-            // eslint-disable-next-line no-await-in-loop
-            _prediction = await response.json();
-            if (response.status !== 200) {
-              setError(_prediction.detail);
-              return;
-            }
-            setPrediction(_prediction);
-          }
-          if (prediction?.output?.length > 0) {
-            const _temp = new Array(previousImages);
-            _temp.push(prediction.output[prediction.output.length - 1]);
-            setPreviousImages(_temp);
-          }
+          const data = await response.json();
+          console.log('Completion Data @ Client: ', data.completion_data);
+          setResult(data.result);
+          setDataFinishReason(data.finish_reason);
           setLoading(false);
         } catch (err) {
           console.log('Error Generating A Response:', err);
           alert('Error Generating A Response:', err);
         }
     }
-    async function generateAIUpgrade() {
-      setLoading(true);
-      let paid = false;
-      paid = await pay();
-      if (paid === false) { return; }
-      try {
-        const response = await fetch('/api/predictions/upscale', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            imageUrl: prediction.output[prediction.output.length - 1],
-            scale: 8,
-            face: false,
-          }),
-        });
-        let _prediction = await response.json();
-        console.log(_prediction);
-        if (response.status !== 201) {
-          setError(_prediction.detail);
-          return;
-        }
-        setUpscale(prediction);
-        while (
-          _prediction.status !== 'succeeded' &&
-          _prediction.status !== 'failed'
-        ) {
-          // eslint-disable-next-line no-await-in-loop
-          await sleep(1000);
-          // eslint-disable-next-line @typescript-eslint/no-shadow
-          const response = await fetch(`/api/predictions/${_prediction.id}`);
-          // eslint-disable-next-line no-await-in-loop
-          _prediction = await response.json();
-          if (response.status !== 200) {
-            setError(_prediction.detail);
-            return;
-          }
-          console.log(_prediction);
-          setUpscale(_prediction);
-        }
-        setLoading(false);
-      } catch (err) {
-        console.log('Error Generating A Response:', err);
-        alert('Error Generating A Response:', err);
-      }
-  }
-    function calculateSatsFee(modelId) {
-      if (modelId === '6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c') {
-        return satsFeeBase;
-      }
-      if (modelId === 'Pokemon') {
-        return satsFeeBase;
-      }
-      return satsFeeBase;
-    }
-    async function generateStableDiffusion() {
-      setModel('6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c');
-      setSatsFee(calculateSatsFee());
-      await generateResponse();
-    }
-    async function generatePokemon() {
-      setModel('3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912');
-      setSatsFee(calculateSatsFee());
-      await generateResponse();
-    }
-
-    // async function generateNFT() {
-    //   const response = await fetch('/api/generateNFT', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       prompt: userInput,
-    //     }),
-    //   });
-    //   return response;
-    // }
     return (
         <div>
-          <Welcome subtext="Describe the Picture in as much detail as possible" />
             <Container>
                 <div className={classes.inner}>
                     <div className={classes.content} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
@@ -394,91 +284,33 @@ export default function NFTDat() {
                         </div>
                     </div>
                 </div>
-                <Center>
-                  <Button
-                    component="a"
-                    href="/"
-                    leftIcon={<IconArrowBack size={18} />}
-                    styles={(theme) => ({
-                                        root: {
-                                        backgroundColor: '#00acee',
-                                        border: 0,
-                                        height: 42,
-                                        paddingLeft: 20,
-                                        paddingRight: 20,
-                                        marginLeft: 12,
-                                        marginTop: 12,
-
-                                        '&:hover': {
-                                            backgroundColor: theme.fn.darken('#00acee', 0.05),
-                                        },
-                                        },
-
-                                        leftIcon: {
-                                        marginRight: 15,
-                                        },
-                                    })}
-                  >
-                                    Home
-                  </Button>
-                </Center>
                 <div>
                   <Textarea
                     onChange={onTextChanged}
                     placeholder="What can I do for you, my human overlord?"
-                    label="Ask HAPI to create anything"
+                    label="Whats the title for your idea?"
                     withAsterisk
                   />
                   <div>
                       <Center>
-                          <div style={{ marginTop: '12px' }}>
-                              <Button variant="gradient" style={{ marginRight: '4px' }} onClick={generateStableDiffusion}>Make Pic 4¢</Button>
-                              <Button variant="outline" onClick={generatePokemon}>Make Pokemon 4¢</Button>
+                          <div style={{ margin: '12px' }}>
+                              <Button variant="gradient" onClick={generateResponse}>Get Creative 4¢</Button>
                           </div>
                       </Center>
                   </div>
                 </div>
-                {/* {
-                  (result?.length < 1)
+                {
+                  (result) === ''
                   ? ''
-                  : <Center>
-                        {result.map((item:any) => (<Image
-                          src={item.url}
-                          style={{ maxHeight: 256, maxWidth: 256 }}
-                        />))}
-                    </Center>
-                } */}
-                  {error && <div>{error}</div>}
-
-                    {prediction && (
-                      <div>
-                        <p>{prediction.status === 'succeeded' ? '' : prediction.status }</p>
-                        {prediction.output && (
-                          <div>
-                            <Center>
-                              <Image
-                                src={prediction.output[prediction.output.length - 1]}
-                                alt="output"
-                                width={500}
-                                height={500}
-                              />
-                            </Center>
-                            {/*<Center>
-                              <div> <Button onClick={generateAIUpgrade} variant="gradient"> Upscale</Button></div>
-                              <div> <Text> *Upscale will not work on Pokemon</Text> </div>
-                            </Center>
-                            */}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                {/* {
-                  (!prediction)
+                  : <Text className={classes.results} style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre-wrap' }}> {result} </Text>
+                }
+                {
+                  (result) === ''
                   ? ''
                   : <Center>
                       { dataFinishReason !== 'stop'
                       ? <div style={{ margin: '12px' }}>
-                            <Button variant="gradient" onClick={generateNFT}>Make NFT</Button>
+                            <Button variant="gradient" onClick={generateResponse}>Continue 4¢</Button>
                         </div>
                         : ''
                       }
@@ -486,25 +318,9 @@ export default function NFTDat() {
                           <Button variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }} onClick={resetPrompt}>Reset</Button>
                       </div>
                     </Center>
-                } */}
-                {upscale && (
-                  <div>
-                    <p>{upscale.status === 'succeeded' ? '' : upscale.status }</p>
-                    {upscale.output && (
-                      <Center>
-                        <Image
-                          src={upscale.output}
-                          alt="output"
-                          width={500}
-                          height={500}
-                        />
-                      </Center>
-                    )}
-                  </div>
-                )}
+                }
 
             </Container>
-            <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );
 }
