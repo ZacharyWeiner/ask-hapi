@@ -108,8 +108,8 @@ export default function UpgradeFace() {
                 <div className={classes.content} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                     <div className={classes.imageContainer}>
                         {loading
-                            ? <Image className={classes.imageBounce} src="/hapi-error.png" loading="lazy" />
-                            : <Image className={classes.image} src="/hapi-neutral.png" loading="lazy" />}
+                            ? <Image className={classes.imageBounce} src="/hapi-error.png" />
+                            : <Image className={classes.image} src="/hapi-neutral.png" />}
                     </div>
                 </div>
             </div>
