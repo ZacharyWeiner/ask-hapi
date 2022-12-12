@@ -45,6 +45,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
                             { label: 'Ai FaceFix', link: '/upgrade-face' },
                             { label: 'Ai Story Ideas', link: '/scene-generator' },
                             { label: 'Age Face', link: '/age-picture' },
+                            { label: 'Auto Green Screen', link: '/green-screen' },
                             ]}
             />
           </NotificationsProvider>
