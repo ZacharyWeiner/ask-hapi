@@ -473,7 +473,7 @@ export default function NFTDat() {
                             <Center>
                             <Button
                               component="a"
-                              href={`"/results?path=${socialFragment}"`}
+                              href={`/results?path=${socialFragment}`}
                               leftIcon={<IconPhoto size={18} />}
                               // eslint-disable-next-line max-len
                               styles={(theme) => ({
