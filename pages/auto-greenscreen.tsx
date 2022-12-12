@@ -148,7 +148,7 @@ export default function UpgradeFace() {
                   onLoadingChanged={setLoading}
                   endPoint="/api/predictions/green-screen"
                   displayType="video"
-                  satoshis={1000000}
+                  satoshis={10000000}
                   buttonText="Auto Green Screen $5"
                   defaultUrl="https://slavettes-layers.s3.amazonaws.com/pewnicorns/samplevideo.mp4"
                 />
