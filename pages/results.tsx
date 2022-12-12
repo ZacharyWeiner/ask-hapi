@@ -11,8 +11,8 @@ export default function Results() {
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:site" content="@ASK_HAPI" />
             <meta name="twitter:title" content="Bitcoin Powered AI" />
-            <meta name="twitter:description" content="Use AI models with nos subscriptions, just micropayments" />
-            <meta name="twitter:image" content={`"https://replicate.delivery/pbxt/${router.query.path}/out-0.png"`} />
+            <meta name="twitter:description" content="Use AI models with no subscriptions, just micropayments" />
+            <meta name="twitter:image" content={`"${imgSrc}"`} />
         </Head>
         <Center> <Image title="imageFrame" src={`${imgSrc}`} /></Center>
         </>
