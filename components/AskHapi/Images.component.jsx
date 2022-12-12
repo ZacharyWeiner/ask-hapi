@@ -2,7 +2,7 @@ import Script from 'next/script';
 import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { IconArrowBack } from '@tabler/icons';
+import { IconArrowBack, IconBrandTwitter, IconPhoto } from '@tabler/icons';
 import Welcome from '../Welcome/Welcome';
 
 export const bounce = keyframes({
@@ -107,6 +107,7 @@ export default function NFTDat() {
     const [satsFee, setSatsFee] = useState(100000);
     const [satsFeeBase, setSatsFeeBase] = useState(100000);
     const [previousImages, setPreviousImages] = useState([]);
+    const [socialFragment, setSocialFragment] = useState('');
     // eslint-disable-next-line no-promise-executor-return
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
@@ -273,7 +274,7 @@ export default function NFTDat() {
             setError(_prediction.detail);
             return;
           }
-          setPrediction(prediction);
+          setPrediction(_prediction);
           while (
             _prediction.status !== 'succeeded' &&
             _prediction.status !== 'failed'
@@ -290,9 +291,15 @@ export default function NFTDat() {
             }
             setPrediction(_prediction);
           }
-          if (prediction?.output?.length > 0) {
+          if (_prediction.status === 'succeeded') {
             const _temp = new Array(previousImages);
-            _temp.push(prediction.output[prediction.output.length - 1]);
+            const _url = _prediction.output[_prediction.output.length - 1];
+            console.log({ _url });
+            _temp.push(_url);
+            let _socialFragment = _url.replace('https://replicate.delivery/pbxt/', '');
+            _socialFragment = _socialFragment.replace('/out-0.png', '');
+            console.log({ _socialFragment });
+            setSocialFragment(_socialFragment);
             setPreviousImages(_temp);
           }
           setLoading(false);
@@ -462,6 +469,62 @@ export default function NFTDat() {
                                 width={500}
                                 height={500}
                               />
+                            </Center>
+                            <Center>
+                            <Button
+                              component="a"
+                              href={`"/results?path=${socialFragment}"`}
+                              leftIcon={<IconPhoto size={18} />}
+                              // eslint-disable-next-line max-len
+                              styles={(theme) => ({
+                                  root: {
+                                    backgroundColor: '#00acee',
+                                    border: 0,
+                                    height: 42,
+                                    paddingLeft: 20,
+                                    paddingRight: 20,
+                                    marginLeft: 12,
+                                    marginTop: 12,
+
+                                    '&:hover': {
+                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                    },
+                                  },
+
+                                  leftIcon: {
+                                    marginRight: 15,
+                                  },
+                                })}
+                            >
+                                              View Large
+                            </Button>
+
+                              <Button
+                                component="a"
+                                href={`https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fwww.askhapi.com%2F&text=I%20just%20created%20this%20on%20askhapi.com.%20%0AThanks%20%40ask_hapi%21%0A&url=https://www.askhapi.com/results?path=${socialFragment}`}
+                                leftIcon={<IconBrandTwitter size={18} />}
+                                styles={(theme) => ({
+                                  root: {
+                                    backgroundColor: '#00acee',
+                                    border: 0,
+                                    height: 42,
+                                    paddingLeft: 20,
+                                    paddingRight: 20,
+                                    marginLeft: 12,
+                                    marginTop: 12,
+
+                                    '&:hover': {
+                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                    },
+                                  },
+
+                                  leftIcon: {
+                                    marginRight: 15,
+                                  },
+                                })}
+                              >
+                                              Share On Twitter
+                              </Button>
                             </Center>
                             {/*<Center>
                               <div> <Button onClick={generateAIUpgrade} variant="gradient"> Upscale</Button></div>
