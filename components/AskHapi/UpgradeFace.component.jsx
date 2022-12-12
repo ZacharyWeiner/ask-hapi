@@ -232,7 +232,7 @@ export default function UpgradeFaceComponent({ onLoadingChanged, endPoint, displ
                       allowFullScreen
                       src={upscale.output}
                     />
-                    <Link href={upscale.output} target="_blank"> View Larger </Link>
+                    <a href={upscale.output} target="_blank" rel="noreferrer"> View Larger </a>
                     </div>
                   )}
                 </div>
