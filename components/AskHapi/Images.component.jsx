@@ -2,7 +2,7 @@ import Script from 'next/script';
 import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { IconArrowBack, IconBrandTwitter, IconPhoto } from '@tabler/icons';
+import { IconArrowBack, IconBrandTwitter, IconPhoto, IconArrowsShuffle2 } from '@tabler/icons';
 import Welcome from '../Welcome/Welcome';
 
 export const bounce = keyframes({
@@ -253,9 +253,9 @@ export default function NFTDat() {
     function onTextChanged(e) {
         setUserInput(e.target.value);
     }
-    async function generateResponse(_model, sats, _drawer) {
+    async function generateResponse(_model, sats, _drawer, _variationBaseUrl) {
         setLoading(true);
-        let paid = true;
+        const paid = true;
         console.log({ _drawer }, { _model });
         //paid = await pay();
         if (paid === false) { return; }
@@ -265,6 +265,12 @@ export default function NFTDat() {
             prompt: userInput,
             version: _model,
             drawer: _drawer,
+          });
+        } else if (_variationBaseUrl) {
+          _body = JSON.stringify({
+            prompt: userInput,
+            version: _model,
+            inputImage: _variationBaseUrl,
           });
         } else {
           _body = JSON.stringify({
@@ -393,6 +399,11 @@ export default function NFTDat() {
       setSatsFee(1000000);
       await generateResponse('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf', 1000000, 'pixel');
     }
+    async function generateVariations() {
+      setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
+      setSatsFee(1000000);
+      await generateResponse('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e', satsFeeBase, prediction.output[prediction.output.length - 1]);
+    }
     // async function generateNFT() {
     //   const response = await fetch('/api/generateNFT', {
     //     method: 'POST',
@@ -498,7 +509,6 @@ export default function NFTDat() {
                             >
                                               View Large
                             </Button>
-
                               <Button
                                 component="a"
                                 href={`https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fwww.askhapi.com%2F&text=I%20just%20created%20this%20on%20askhapi.com.%20%0AThanks%20%40ask_hapi%21%0A&url=https://www.askhapi.com/results?path=${socialFragment}`}
@@ -567,6 +577,31 @@ export default function NFTDat() {
                 )}
 
             </Container>
+            <Button
+            onClick={generateVariations}
+              leftIcon={<IconArrowsShuffle2 size={18} />}
+              styles={(theme) => ({
+              root: {
+                backgroundColor: '#00acee',
+                border: 0,
+                height: 42,
+                paddingLeft: 20,
+                paddingRight: 20,
+                marginLeft: 12,
+                marginTop: 12,
+
+                '&:hover': {
+                  backgroundColor: theme.fn.darken('#00acee', 0.05),
+                },
+              },
+
+              leftIcon: {
+                marginRight: 15,
+              },
+            })}
+            >
+                          Make Variations
+            </Button>
             <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );

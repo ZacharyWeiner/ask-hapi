@@ -6,6 +6,11 @@ export default async function handler(req, res) {
         version:req.body.version, 
         input: { prompts: req.body.prompt, drawer: req.body.drawer, settings: "{quality: better, pixel_size: [128, 64], size: [512, 512], custom_loss: 'smoothness, edge', edge_color: black, alpha_use_g: true, alpha_gamma: 4}" }, 
       })
+    } else if(req.body.inputImage){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { inputImage: req.body.inputImage}, 
+      })
     } else {
       _body = JSON.stringify({
         version:req.body.version, 
