@@ -438,7 +438,7 @@ export default function NFTDat() {
                   <div>
                       <Center>
                           <div style={{ marginTop: '12px' }}>
-                              <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button>
+                              {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
                               <Button variant="gradient" style={{ marginRight: '4px' }} onClick={generateStableDiffusion}>Make Pic 4¢</Button>
                               <Button variant="outline" onClick={generatePokemon}>Make Pokemon 4¢</Button>
                           </div>
