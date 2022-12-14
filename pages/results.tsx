@@ -4,7 +4,7 @@ import { Center, Image } from '@mantine/core';
 
 export default function Results() {
     const router = useRouter();
-    const imgSrc = `https://replicate.delivery/pbxt/${router.query.path}/out-0.png`;
+    const imgSrc = `https://replicate.delivery/pbxt/${router.query.path}`;
     return (
         <>
         <Head>
