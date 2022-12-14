@@ -1,27 +1,15 @@
 import axios from 'axios';
 import * as React from 'react';
+import { Button, Center, Image } from '@mantine/core';
 
-export default function MintImage() {
+export default function MintImage({ imageUrl, imageName, prompt }) {
     const deployEndpoint = 'api/run/deploy_contract';
     const mintEndpoint = 'api/run/mint_nft';
     //const imageUrl = 'https://replicate.delivery/pbxt/xpYAWPkDK64cC1d4StdLQtfk9GfGmYpNF0aA1BzxW7FYf1SgA/out-0.png';
-    const imageUrl = 'https://replicate.delivery/pbxt/nIJxuyTp2aKPPpU2BfB1ew8uvi7g6cf27UOce5JaSfjleWaCE/out-0.png';
-    const imageName = 'out-0.png';//`${imageUrl.split('/')[4]}.png`;
+    // const imageUrl = 'https://replicate.delivery/pbxt/m5E30152UmZLHRRwwHS9pj886uf4qryIo6uT3TuVJu4Ze3JQA/out-0.png';
+    // const imageName = 'out-0.png';//`${imageUrl.split('/')[4]}.png`;
+    // const prompt = 'man with curly hair crying';
     console.log(imageName);
-    const mintClassRequestBody = {
-        type: 'NFT',
-        symbol: 'HAPI',
-        owner: '18YBehYD6hQGdLeWd8QcoHnFGUXh2g6csJ', //ASK_HAPI_TEST
-        name: 'NFT FROM ASKHAPI.com',
-        description: 'GoldBars with Bitcoin Logo',
-        options: {
-          numbered: false,
-          image: {
-            name: imageName,
-            size: 10,
-          },
-        },
-      };
 
      function _bufferToAsm(b, type, name) {
         const script = [
@@ -53,7 +41,9 @@ export default function MintImage() {
     }
     async function login() {
         try {
-            const token = await window.relayone.authBeta();
+            // eslint-disable-next-line no-undef
+            const w = window;
+            const token = await w.relayone.authBeta();
             const [payload, signature] = token.split('.');
             const data = JSON.parse(atob(payload)); // Buffer.from(payload, 'base64')
             console.log('Relay Payment Info:', data);
@@ -75,6 +65,20 @@ export default function MintImage() {
             console.log(error);
             return;
         }
+        const mintClassRequestBody = {
+            type: 'NFT',
+            symbol: 'HAPI',
+            owner: address, //ASK_HAPI_TEST
+            name: 'NFT FROM ASKHAPI.com',
+            description: prompt,
+            options: {
+              numbered: false,
+              image: {
+                name: imageName,
+                size: 10,
+              },
+            },
+          };
         //First get the contract transaction template;
         const response = await axios.post(`https://staging-backend.relayx.com/${deployEndpoint}`, mintClassRequestBody);
         console.log('Gets a raw transaction:', response.data);
@@ -108,8 +112,12 @@ export default function MintImage() {
     }
     return (
             <div>
-                <button type="button" onClick={mintClass}> Mint Class</button>
-                <button type="button" onClick={login}> Login</button>
+                <Center>
+                    <Image src={imageUrl} height="100%" width="100%" style={{ maxHeight: '500px', maxWidth: '500px' }} />
+                </Center>
+                <Center style={{ margin: '12px' }}>
+                    <Button type="button" onClick={mintClass}> Mint This On Relay!</Button>
+                </Center>
             </div>
         );
 }
