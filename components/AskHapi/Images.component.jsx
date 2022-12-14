@@ -257,7 +257,7 @@ export default function NFTDat() {
         setLoading(true);
         let paid = true;
         console.log({ _drawer }, { _model });
-        //paid = await pay();
+        paid = await pay();
         if (paid === false) { return; }
         let _body;
         if (_drawer) {
