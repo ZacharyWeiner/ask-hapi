@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
     console.log(req.body.prompt)
     let _body; 
-    if(req.body.drawer){
+    if(req.body.drawer && req.body.drawer !== ''){
       _body = JSON.stringify({
         version:req.body.version, 
         input: { prompts: req.body.prompt, drawer: req.body.drawer, settings: "{quality: better, pixel_size: [128, 64], size: [512, 512], custom_loss: 'smoothness, edge', edge_color: black, alpha_use_g: true, alpha_gamma: 4}" }, 
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     } else if(req.body.inputImage){
       _body = JSON.stringify({
         version:req.body.version, 
-        input: { inputImage: req.body.inputImage}, 
+        input: { input_image: req.body.inputImage}, 
       })
     } else {
       _body = JSON.stringify({
