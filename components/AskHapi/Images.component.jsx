@@ -1,8 +1,8 @@
 import Script from 'next/script';
-import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
+import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea, Paper } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { IconArrowBack, IconBrandTwitter, IconPhoto } from '@tabler/icons';
+import { IconArrowBack, IconBrandTwitter, IconPhoto, IconArrowsShuffle2 } from '@tabler/icons';
 import Welcome from '../Welcome/Welcome';
 
 export const bounce = keyframes({
@@ -253,7 +253,7 @@ export default function NFTDat() {
     function onTextChanged(e) {
         setUserInput(e.target.value);
     }
-    async function generateResponse(_model, sats, _drawer) {
+    async function generateResponse(_model, sats, _drawer, _variationBaseUrl) {
         setLoading(true);
         let paid = true;
         console.log({ _drawer }, { _model });
@@ -265,6 +265,12 @@ export default function NFTDat() {
             prompt: userInput,
             version: _model,
             drawer: _drawer,
+          });
+        } else if (_variationBaseUrl) {
+          _body = JSON.stringify({
+            prompt: userInput,
+            version: _model,
+            inputImage: _variationBaseUrl,
           });
         } else {
           _body = JSON.stringify({
@@ -305,12 +311,12 @@ export default function NFTDat() {
             setPrediction(_prediction);
           }
           if (_prediction.status === 'succeeded') {
-            const _temp = new Array(previousImages);
+            const _temp = new Array(...previousImages);
             const _url = _prediction.output[_prediction.output.length - 1];
             console.log({ _url });
             _temp.push(_url);
-            let _socialFragment = _url.replace('https://replicate.delivery/pbxt/', '');
-            _socialFragment = _socialFragment.replace('/out-0.png', '');
+            const _socialFragment = _url.replace('https://replicate.delivery/pbxt/', '');
+            //_socialFragment = _socialFragment.replace('/out-0.png', '');
             console.log({ _socialFragment });
             setSocialFragment(_socialFragment);
             setPreviousImages(_temp);
@@ -393,6 +399,11 @@ export default function NFTDat() {
       setSatsFee(1000000);
       await generateResponse('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf', 1000000, 'pixel');
     }
+    async function generateVariations() {
+      setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
+      setSatsFee(1000000);
+      await generateResponse('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e', satsFeeBase, null, prediction.output[prediction.output.length - 1]);
+    }
     // async function generateNFT() {
     //   const response = await fetch('/api/generateNFT', {
     //     method: 'POST',
@@ -466,28 +477,30 @@ export default function NFTDat() {
                               <Image
                                 src={prediction.output[prediction.output.length - 1]}
                                 alt="output"
-                                width={500}
-                                height={500}
+                                width={420}
+                                height={420}
+                                radius="lg"
                               />
                             </Center>
                             <Center>
                             <Button
                               component="a"
                               href={`/results?path=${socialFragment}`}
+                              target="_blank"
+                              variant="outline"
                               leftIcon={<IconPhoto size={18} />}
                               // eslint-disable-next-line max-len
                               styles={(theme) => ({
                                   root: {
-                                    backgroundColor: '#00acee',
                                     border: 0,
                                     height: 42,
-                                    paddingLeft: 20,
-                                    paddingRight: 20,
-                                    marginLeft: 12,
-                                    marginTop: 12,
+                                    paddingLeft: 8,
+                                    paddingRight: 8,
+                                    marginLeft: 6,
+                                    marginTop: 6,
 
                                     '&:hover': {
-                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                      backgroundColor: theme.fn.darken('#000', 0.05),
                                     },
                                   },
 
@@ -498,23 +511,48 @@ export default function NFTDat() {
                             >
                                               View Large
                             </Button>
+                            <Button
+                              onClick={generateVariations}
+                              leftIcon={<IconArrowsShuffle2 size={18} />}
+                              variant="outline"
+                              styles={(theme) => ({
+                                root: {
+                                  border: 0,
+                                  height: 42,
+                                  paddingLeft: 8,
+                                  paddingRight: 8,
+                                  marginLeft: 12,
+                                  marginTop: 12,
 
+                                  '&:hover': {
+                                    backgroundColor: theme.fn.darken('#000', 0.05),
+                                  },
+                                },
+
+                                leftIcon: {
+                                  marginRight: 15,
+                                },
+                              })}
+                            >
+                              Make Variation
+                            </Button>
                               <Button
                                 component="a"
+                                target="_blank"
+                                variant="outline"
                                 href={`https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fwww.askhapi.com%2F&text=I%20just%20created%20this%20on%20askhapi.com.%20%0AThanks%20%40ask_hapi%21%0A&url=https://www.askhapi.com/results?path=${socialFragment}`}
                                 leftIcon={<IconBrandTwitter size={18} />}
                                 styles={(theme) => ({
                                   root: {
-                                    backgroundColor: '#00acee',
                                     border: 0,
                                     height: 42,
-                                    paddingLeft: 20,
-                                    paddingRight: 20,
-                                    marginLeft: 12,
-                                    marginTop: 12,
+                                    paddingLeft: 8,
+                                    paddingRight: 8,
+                                    marginLeft: 6,
+                                    marginTop: 6,
 
                                     '&:hover': {
-                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                      backgroundColor: theme.fn.darken('#000', 0.05),
                                     },
                                   },
 
@@ -567,6 +605,42 @@ export default function NFTDat() {
                 )}
 
             </Container>
+            <Center shadow="xl" radius="lg" p="md" style={{ overflowX: 'scroll', backgroundColor: 'blue.3' }}>
+              {previousImages.map((image) => (
+                  <Paper shadow="xs" radius="lg" p="md">
+                    <Image width="250px" height="250px" src={image} radius="lg" />
+                    <Center>
+                      <Button
+                        component="a"
+                        target="_blank"
+                        variant="outline"
+                        href={`/results?path=${image.split('/')[4]}/${image.split('/')[5]}`}
+                        leftIcon={<IconPhoto size={18} />}
+                      // eslint-disable-next-line max-len
+                        styles={(theme) => ({
+                          root: {
+                            border: 0,
+                            height: 22,
+                            paddingLeft: 10,
+                            paddingRight: 10,
+                            marginLeft: 6,
+                            marginTop: 6,
+
+                            '&:hover': {
+                              backgroundColor: theme.fn.darken('#000', 0.05),
+                            },
+                          },
+
+                          leftIcon: {
+                            marginRight: 15,
+                          },
+                        })}
+                      >
+                                      View Large
+                      </Button>
+                    </Center>
+                  </Paper>))}
+            </Center>
             <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );
