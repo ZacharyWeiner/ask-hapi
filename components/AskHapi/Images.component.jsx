@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { IconArrowBack, IconBrandTwitter, IconPhoto } from '@tabler/icons';
 import Welcome from '../Welcome/Welcome';
+import MintModal from '../Mint/mintModal.component';
 
 export const bounce = keyframes({
   'from, 20%, 53%, 80%, to': { transform: 'translate3d(0, 0, 0)' },
@@ -108,6 +109,7 @@ export default function NFTDat() {
     const [satsFeeBase, setSatsFeeBase] = useState(100000);
     const [previousImages, setPreviousImages] = useState([]);
     const [socialFragment, setSocialFragment] = useState('');
+    const [mintModalOpen, setMintModalOpen] = useState(false);
     // eslint-disable-next-line no-promise-executor-return
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
@@ -387,6 +389,12 @@ export default function NFTDat() {
     //   });
     //   return response;
     // }
+    function openModal() {
+      setMintModalOpen(true);
+    }
+    function handleClose() {
+      setMintModalOpen(false);
+    }
     return (
         <div>
           <Welcome subtext="Describe the Picture in as much detail as possible" />
@@ -567,6 +575,39 @@ export default function NFTDat() {
                 )}
 
             </Container>
+            <Button
+              onClick={openModal}
+              leftIcon={<IconPhoto size={18} />}
+            // eslint-disable-next-line max-len
+              styles={(theme) => ({
+                root: {
+                  backgroundColor: '#00acee',
+                  border: 0,
+                  height: 42,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  marginLeft: 12,
+                  marginTop: 12,
+
+                  '&:hover': {
+                    backgroundColor: theme.fn.darken('#00acee', 0.05),
+                  },
+                },
+
+                leftIcon: {
+                  marginRight: 15,
+                },
+              })}
+            >
+                            Open Mint Modal
+            </Button>
+            <MintModal
+              open={mintModalOpen}
+              imageUrl={prediction.output?.length ? prediction.output[prediction.output.length - 1] : ''}
+              imageName="Minted With AskHapi.com"
+              prompt={userInput}
+              handleClose={handleClose}
+            />
             <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );

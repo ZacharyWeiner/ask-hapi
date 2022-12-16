@@ -1,14 +1,12 @@
 import axios from 'axios';
 import * as React from 'react';
-import { Button, Center, Image } from '@mantine/core';
+import { useState } from 'react';
+import { Button, Center, Image, Text } from '@mantine/core';
 
 export default function MintImage({ imageUrl, imageName, prompt }) {
     const deployEndpoint = 'api/run/deploy_contract';
     const mintEndpoint = 'api/run/mint_nft';
-    //const imageUrl = 'https://replicate.delivery/pbxt/xpYAWPkDK64cC1d4StdLQtfk9GfGmYpNF0aA1BzxW7FYf1SgA/out-0.png';
-    // const imageUrl = 'https://replicate.delivery/pbxt/m5E30152UmZLHRRwwHS9pj886uf4qryIo6uT3TuVJu4Ze3JQA/out-0.png';
-    // const imageName = 'out-0.png';//`${imageUrl.split('/')[4]}.png`;
-    // const prompt = 'man with curly hair crying';
+    const [title, setTitle] = useState('NFT FROM ASKHAPI.com');
     console.log(imageName);
 
      function _bufferToAsm(b, type, name) {
@@ -69,7 +67,7 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
             type: 'NFT',
             symbol: 'HAPI',
             owner: address, //ASK_HAPI_TEST
-            name: 'NFT FROM ASKHAPI.com',
+            name: title,
             description: prompt,
             options: {
               numbered: false,
@@ -113,7 +111,10 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
     return (
             <div>
                 <Center>
-                    <Image src={imageUrl} height="100%" width="100%" style={{ maxHeight: '500px', maxWidth: '500px' }} />
+                  <Text> {title} </Text>
+                </Center>
+                <Center>
+                    <Image src={imageUrl} height="100%" width="100%" radius="xl" style={{ maxHeight: '500px', maxWidth: '500px' }} />
                 </Center>
                 <Center style={{ margin: '12px' }}>
                     <Button type="button" onClick={mintClass}> Mint This On Relay!</Button>
