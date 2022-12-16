@@ -2,8 +2,9 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Center, Container, Image } from '@mantine/core';
-import Welcome from '../components/Welcome/Welcome';
 import { IconArrowBack } from '@tabler/icons';
+import Welcome from '../components/Welcome/Welcome';
+
 
 export default function Results() {
     const router = useRouter();
