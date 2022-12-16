@@ -7,6 +7,8 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
     const deployEndpoint = 'api/run/deploy_contract';
     const mintEndpoint = 'api/run/mint_nft';
     const [title, setTitle] = useState('NFT FROM ASKHAPI.com');
+    const [loading, setLoading] = useState('');
+    const [status, setStatus] = useState('');
     console.log(imageName);
 
      function _bufferToAsm(b, type, name) {
@@ -55,14 +57,18 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
         }
     }
     async function mintClass() {
+        setLoading(true);
         // eslint-disable-next-line no-undef
+        setStatus('Checking Account ...');
         const w = window;
         const { address, paymail, error } = await login();
         if (error) {
             alert('there was an error logging in');
             console.log(error);
+            setLoading(false);
             return;
         }
+        setStatus('Preparing For Mint ...');
         const mintClassRequestBody = {
             type: 'NFT',
             symbol: 'HAPI',
@@ -70,43 +76,48 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
             name: title,
             description: prompt,
             options: {
-              numbered: false,
+              numbered: true,
               image: {
                 name: imageName,
                 size: 10,
               },
             },
           };
-        //First get the contract transaction template;
-        const response = await axios.post(`https://staging-backend.relayx.com/${deployEndpoint}`, mintClassRequestBody);
-        console.log('Gets a raw transaction:', response.data);
-
-        //Then get the image Buffer to append to TX
-        const fileASM = await fileToAsm(imageUrl, imageName);
-        const asScript = w.bsv.Script.fromASM(fileASM);
-        const bsvtx = new w.bsv.Transaction(response.data.data.rawtx);
-        console.log('Empty TX', bsvtx);
-        const output = new w.bsv.Transaction.Output({
-            satoshis: '1',
-            script: asScript,
-          });
-          console.log(output);
-         bsvtx.outputs[0] = output;
-
-        //Broadcast the Returned TX
-        const sendResponse = await w.relayone.send(bsvtx.toString());
-        console.log('recieves response from send:', sendResponse);
-        const _location = `${sendResponse.txid}_o2`;
-        console.log({ _location });
-        const mintBody = { owner: address, amount: 1, location: _location };
-        console.log({ mintBody });
         try {
-            const mintTxResponse = await axios.post(`https://staging-backend.relayx.com/${mintEndpoint}`, mintBody);
-            console.log(mintTxResponse.data.data.rawtx);
-            const mintResponse =
-                    await w.relayone.send(mintTxResponse.data.data.rawtx.toString());
-                    console.log(mintResponse);
-        } catch (err) { console.log(err); }
+          setStatus('Minting Class...');
+          //First get the contract transaction template;
+          const response = await axios.post(`https://staging-backend.relayx.com/${deployEndpoint}`, mintClassRequestBody);
+          console.log('Gets a raw transaction:', response.data);
+
+          //Then get the image Buffer to append to TX
+          const fileASM = await fileToAsm(imageUrl, imageName);
+          const asScript = w.bsv.Script.fromASM(fileASM);
+          const bsvtx = new w.bsv.Transaction(response.data.data.rawtx);
+          console.log('Empty TX', bsvtx);
+          const output = new w.bsv.Transaction.Output({
+              satoshis: '1',
+              script: asScript,
+            });
+            console.log(output);
+          bsvtx.outputs[0] = output;
+
+          //Broadcast the Returned TX
+          const sendResponse = await w.relayone.send(bsvtx.toString());
+          console.log('recieves response from send:', sendResponse);
+          setStatus('Minting Class Complete ...');
+          const _location = `${sendResponse.txid}_o2`;
+          console.log({ _location });
+          const mintBody = { owner: address, amount: 1, location: _location };
+          console.log({ mintBody });
+          setStatus('Minting NFT ...');
+          const mintTxResponse = await axios.post(`https://staging-backend.relayx.com/${mintEndpoint}`, mintBody);
+          console.log(mintTxResponse.data.data.rawtx);
+          const mintResponse =
+                  await w.relayone.send(mintTxResponse.data.data.rawtx.toString());
+          console.log(mintResponse);
+          setStatus('Success!');
+        } catch (err) { console.log(err); setStatus('Failed :*|'); }
+        setLoading(false);
     }
     return (
             <div>
@@ -117,7 +128,7 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
                     <Image src={imageUrl} height="100%" width="100%" radius="xl" style={{ maxHeight: '500px', maxWidth: '500px' }} />
                 </Center>
                 <Center style={{ margin: '12px' }}>
-                    <Button type="button" onClick={mintClass}> Mint This On Relay!</Button>
+                    <Button type="button" onClick={mintClass}> {loading ? status : 'Mint This On Relay!'} </Button>
                 </Center>
             </div>
         );

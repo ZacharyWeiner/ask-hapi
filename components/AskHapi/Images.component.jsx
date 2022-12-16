@@ -1,8 +1,8 @@
 import Script from 'next/script';
-import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea } from '@mantine/core';
+import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea, Paper } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { IconArrowBack, IconBrandTwitter, IconPhoto } from '@tabler/icons';
+import { IconArrowBack, IconBrandTwitter, IconPhoto, IconArrowsShuffle2 } from '@tabler/icons';
 import Welcome from '../Welcome/Welcome';
 import MintModal from '../Mint/mintModal.component';
 
@@ -95,7 +95,7 @@ export default function NFTDat() {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState([]);
-    const [userInput, setUserInput] = useState('Create a list of 5 reasons to love TV');
+    const [userInput, setUserInput] = useState('Monkey');
     const [prompt, setPrompt] = useState();
     const [dataFinishReason, setDataFinishReason] = useState();
     const [hasTwechWallet, setHasTwetchWallet] = useState(false);
@@ -104,12 +104,14 @@ export default function NFTDat() {
     const [prediction, setPrediction] = useState([]);
     const [upscale, setUpscale] = useState([]);
     const [error, setError] = useState(null);
-    const [model, setModel] = useState('6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c');
+    const [model, setModel] = useState('');
     const [satsFee, setSatsFee] = useState(100000);
     const [satsFeeBase, setSatsFeeBase] = useState(100000);
     const [previousImages, setPreviousImages] = useState([]);
     const [socialFragment, setSocialFragment] = useState('');
     const [mintModalOpen, setMintModalOpen] = useState(false);
+    const [drawer, setDrawer] = useState();
+    const [selectedImageUrl, setSelectedImageUrl] = useState('');
     // eslint-disable-next-line no-promise-executor-return
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
@@ -254,21 +256,38 @@ export default function NFTDat() {
     function onTextChanged(e) {
         setUserInput(e.target.value);
     }
-    async function generateResponse() {
+    async function generateResponse(_model, sats, _drawer, _variationBaseUrl) {
         setLoading(true);
-        let paid = false;
+        let paid = true;
+        console.log({ _drawer }, { _model });
         paid = await pay();
         if (paid === false) { return; }
+        let _body;
+        if (_drawer) {
+          _body = JSON.stringify({
+            prompt: userInput,
+            version: _model,
+            drawer: _drawer,
+          });
+        } else if (_variationBaseUrl) {
+          _body = JSON.stringify({
+            prompt: userInput,
+            version: _model,
+            inputImage: _variationBaseUrl,
+          });
+        } else {
+          _body = JSON.stringify({
+            prompt: userInput,
+            version: _model,
+          });
+        }
         try {
           const response = await fetch('/api/predictions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              prompt: userInput,
-              version: model,
-            }),
+            body: _body,
           });
           let _prediction = await response.json();
           console.log(_prediction);
@@ -287,6 +306,7 @@ export default function NFTDat() {
             const response = await fetch(`/api/predictions/${_prediction.id}`);
             // eslint-disable-next-line no-await-in-loop
             _prediction = await response.json();
+            console.log(_prediction);
             if (response.status !== 200) {
               setError(_prediction.detail);
               return;
@@ -294,12 +314,13 @@ export default function NFTDat() {
             setPrediction(_prediction);
           }
           if (_prediction.status === 'succeeded') {
-            const _temp = new Array(previousImages);
+            const _temp = new Array(...previousImages);
             const _url = _prediction.output[_prediction.output.length - 1];
+            setSelectedImageUrl(_url);
             console.log({ _url });
             _temp.push(_url);
-            let _socialFragment = _url.replace('https://replicate.delivery/pbxt/', '');
-            _socialFragment = _socialFragment.replace('/out-0.png', '');
+            const _socialFragment = _url.replace('https://replicate.delivery/pbxt/', '');
+            //_socialFragment = _socialFragment.replace('/out-0.png', '');
             console.log({ _socialFragment });
             setSocialFragment(_socialFragment);
             setPreviousImages(_temp);
@@ -361,7 +382,7 @@ export default function NFTDat() {
       if (modelId === '6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c') {
         return satsFeeBase;
       }
-      if (modelId === 'Pokemon') {
+      if (modelId === '3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912') {
         return satsFeeBase;
       }
       return satsFeeBase;
@@ -369,14 +390,24 @@ export default function NFTDat() {
     async function generateStableDiffusion() {
       setModel('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc');
       setSatsFee(calculateSatsFee());
-      await generateResponse();
+      await generateResponse('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc', satsFeeBase);
     }
     async function generatePokemon() {
       setModel('3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912');
       setSatsFee(calculateSatsFee());
-      await generateResponse();
+      await generateResponse('3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912', satsFeeBase);
     }
-
+    async function generatePixelArt() {
+      setDrawer('pixel');
+      setModel('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf');
+      setSatsFee(1000000);
+      await generateResponse('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf', 1000000, 'pixel');
+    }
+    async function generateVariations() {
+      setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
+      setSatsFee(1000000);
+      await generateResponse('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e', satsFeeBase, null, prediction.output[prediction.output.length - 1]);
+    }
     // async function generateNFT() {
     //   const response = await fetch('/api/generateNFT', {
     //     method: 'POST',
@@ -414,25 +445,6 @@ export default function NFTDat() {
                     component="a"
                     href="/"
                     leftIcon={<IconArrowBack size={18} />}
-                    styles={(theme) => ({
-                                        root: {
-                                        backgroundColor: '#00acee',
-                                        border: 0,
-                                        height: 42,
-                                        paddingLeft: 20,
-                                        paddingRight: 20,
-                                        marginLeft: 12,
-                                        marginTop: 12,
-
-                                        '&:hover': {
-                                            backgroundColor: theme.fn.darken('#00acee', 0.05),
-                                        },
-                                        },
-
-                                        leftIcon: {
-                                        marginRight: 15,
-                                        },
-                                    })}
                   >
                                     Home
                   </Button>
@@ -447,6 +459,7 @@ export default function NFTDat() {
                   <div>
                       <Center>
                           <div style={{ marginTop: '12px' }}>
+                              {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
                               <Button variant="gradient" style={{ marginRight: '4px' }} onClick={generateStableDiffusion}>Make Pic 4¢</Button>
                               <Button variant="outline" onClick={generatePokemon}>Make Pokemon 4¢</Button>
                           </div>
@@ -474,28 +487,30 @@ export default function NFTDat() {
                               <Image
                                 src={prediction.output[prediction.output.length - 1]}
                                 alt="output"
-                                width={500}
-                                height={500}
+                                width={420}
+                                height={420}
+                                radius="lg"
                               />
                             </Center>
                             <Center>
                             <Button
                               component="a"
                               href={`/results?path=${socialFragment}`}
+                              target="_blank"
+                              variant="outline"
                               leftIcon={<IconPhoto size={18} />}
                               // eslint-disable-next-line max-len
                               styles={(theme) => ({
                                   root: {
-                                    backgroundColor: '#00acee',
                                     border: 0,
                                     height: 42,
-                                    paddingLeft: 20,
-                                    paddingRight: 20,
-                                    marginLeft: 12,
-                                    marginTop: 12,
+                                    paddingLeft: 8,
+                                    paddingRight: 8,
+                                    marginLeft: 6,
+                                    marginTop: 6,
 
                                     '&:hover': {
-                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                      backgroundColor: theme.fn.darken('#000', 0.05),
                                     },
                                   },
 
@@ -506,23 +521,48 @@ export default function NFTDat() {
                             >
                                               View Large
                             </Button>
+                            <Button
+                              onClick={generateVariations}
+                              leftIcon={<IconArrowsShuffle2 size={18} />}
+                              variant="outline"
+                              styles={(theme) => ({
+                                root: {
+                                  border: 0,
+                                  height: 42,
+                                  paddingLeft: 8,
+                                  paddingRight: 8,
+                                  marginLeft: 12,
+                                  marginTop: 12,
 
+                                  '&:hover': {
+                                    backgroundColor: theme.fn.darken('#000', 0.05),
+                                  },
+                                },
+
+                                leftIcon: {
+                                  marginRight: 15,
+                                },
+                              })}
+                            >
+                              Make Variation
+                            </Button>
                               <Button
                                 component="a"
+                                target="_blank"
+                                variant="outline"
                                 href={`https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fwww.askhapi.com%2F&text=I%20just%20created%20this%20on%20askhapi.com.%20%0AThanks%20%40ask_hapi%21%0A&url=https://www.askhapi.com/results?path=${socialFragment}`}
                                 leftIcon={<IconBrandTwitter size={18} />}
                                 styles={(theme) => ({
                                   root: {
-                                    backgroundColor: '#00acee',
                                     border: 0,
                                     height: 42,
-                                    paddingLeft: 20,
-                                    paddingRight: 20,
-                                    marginLeft: 12,
-                                    marginTop: 12,
+                                    paddingLeft: 8,
+                                    paddingRight: 8,
+                                    marginLeft: 6,
+                                    marginTop: 6,
 
                                     '&:hover': {
-                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                      backgroundColor: theme.fn.darken('#000', 0.05),
                                     },
                                   },
 
@@ -603,11 +643,47 @@ export default function NFTDat() {
             </Button>
             <MintModal
               open={mintModalOpen}
-              imageUrl={prediction.output?.length ? prediction.output[prediction.output.length - 1] : ''}
+              imageUrl={selectedImageUrl}
               imageName="Minted With AskHapi.com"
               prompt={userInput}
               handleClose={handleClose}
             />
+            <Center shadow="xl" radius="lg" p="md" style={{ overflowX: 'scroll', backgroundColor: 'blue.3' }}>
+              {previousImages.map((image) => (
+                  <Paper shadow="xs" radius="lg" p="md" key="image">
+                    <Image width="250px" height="250px" src={image} radius="lg" />
+                    <Center>
+                      <Button
+                        component="a"
+                        target="_blank"
+                        variant="outline"
+                        href={`/results?path=${image.split('/')[4]}/${image.split('/')[5]}`}
+                        leftIcon={<IconPhoto size={18} />}
+                      // eslint-disable-next-line max-len
+                        styles={(theme) => ({
+                          root: {
+                            border: 0,
+                            height: 22,
+                            paddingLeft: 10,
+                            paddingRight: 10,
+                            marginLeft: 6,
+                            marginTop: 6,
+
+                            '&:hover': {
+                              backgroundColor: theme.fn.darken('#000', 0.05),
+                            },
+                          },
+
+                          leftIcon: {
+                            marginRight: 15,
+                          },
+                        })}
+                      >
+                                      View Large
+                      </Button>
+                    </Center>
+                  </Paper>))}
+            </Center>
             <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );

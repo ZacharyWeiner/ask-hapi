@@ -1,23 +1,35 @@
 export default async function handler(req, res) {
     console.log(req.body.prompt)
-    const response = await fetch("https://api.replicate.com/v1/predictions", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // Pinned to a specific version of kuprel/min-dalle, fetched from:
-        // https://replicate.com/kuprel/min-dalle/versions
+    let _body; 
+    if(req.body.drawer && req.body.drawer !== ''){
+      _body = JSON.stringify({
         version:req.body.version, 
-          //"6359a0cab3ca6e4d3320c33d79096161208e9024d174b2311e5a21b6c7e1131c", // - Stable Diffusion
-          //"7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc", // - Stable Diffusion 2
-          
-          //"3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912", // Text to Pokemon
+        input: { prompts: req.body.prompt, drawer: req.body.drawer, settings: "{quality: better, pixel_size: [128, 64], size: [512, 512], custom_loss: 'smoothness, edge', edge_color: black, alpha_use_g: true, alpha_gamma: 4}" }, 
+      })
+    } else if(req.body.inputImage){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { input_image: req.body.inputImage}, 
+      })
+    } else {
+      _body = JSON.stringify({
+        version:req.body.version, 
         input: { prompt: req.body.prompt, grid_size: 1 }, 
-      }),
-    });
-  
+      })
+    }
+    console.log(_body);
+    let response;
+    try{
+      response = await fetch("https://api.replicate.com/v1/predictions", {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: _body,
+      });
+    }catch(err){ console.log(err)} 
+    console.log('got response', response)
     if (response.status !== 201) {
       let error = await response.json();
       res.statusCode = 500;

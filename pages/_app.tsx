@@ -40,12 +40,13 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
             <Component {...pageProps} />
-            <Footer links={[{ label: 'Ai Assistant', link: '/' },
-                            { label: 'Ai Image', link: '/images' },
+            <Footer links={[{ label: 'Home', link: '/' },
+                            { label: 'Generate Pics', link: '/images' },
                             { label: 'Ai FaceFix', link: '/upgrade-face' },
                             { label: 'Ai Story Ideas', link: '/scene-generator' },
                             { label: 'Age Face', link: '/age-picture' },
                             { label: 'Auto Green Screen', link: '/green-screen' },
+                            { label: 'FAQ', link: '/faq' },
                             ]}
             />
           </NotificationsProvider>
