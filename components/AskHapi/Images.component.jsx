@@ -485,7 +485,7 @@ export default function NFTDat() {
                           <div>
                             <Center>
                               <Image
-                                src={prediction.output[prediction.output.length - 1]}
+                                src={selectedImageUrl}
                                 alt="output"
                                 width={420}
                                 height={420}
@@ -519,7 +519,7 @@ export default function NFTDat() {
                                   },
                                 })}
                             >
-                                              View Large
+                                              Larger
                             </Button>
                             <Button
                               onClick={generateVariations}
@@ -532,7 +532,7 @@ export default function NFTDat() {
                                   paddingLeft: 8,
                                   paddingRight: 8,
                                   marginLeft: 12,
-                                  marginTop: 12,
+                                  marginTop: 6,
 
                                   '&:hover': {
                                     backgroundColor: theme.fn.darken('#000', 0.05),
@@ -544,7 +544,7 @@ export default function NFTDat() {
                                 },
                               })}
                             >
-                              Make Variation
+                              Variations
                             </Button>
                               <Button
                                 component="a"
@@ -571,14 +571,46 @@ export default function NFTDat() {
                                   },
                                 })}
                               >
-                                              Share On Twitter
+                                              Share
                               </Button>
                             </Center>
-                            {/*<Center>
-                              <div> <Button onClick={generateAIUpgrade} variant="gradient"> Upscale</Button></div>
-                              <div> <Text> *Upscale will not work on Pokemon</Text> </div>
+                            <Center>
+                             {/* <div> <Button onClick={generateAIUpgrade} variant="gradient"> Upscale</Button></div>
+                              <div> <Text> *Upscale will not work on Pokemon</Text> </div> */}
+                              <Button
+                                onClick={openModal}
+                                leftIcon={<IconPhoto size={18} />}
+                              // eslint-disable-next-line max-len
+                                styles={(theme) => ({
+                                  root: {
+                                    background: theme.fn.linearGradient(45, 'red', 'blue'),
+                                    border: 0,
+                                    height: 42,
+                                    paddingLeft: 20,
+                                    paddingRight: 20,
+                                    marginLeft: 12,
+                                    marginTop: 12,
+
+                                    '&:hover': {
+                                      backgroundColor: theme.fn.darken('#00acee', 0.05),
+                                    },
+                                  },
+
+                                  leftIcon: {
+                                    marginRight: 15,
+                                  },
+                                })}
+                              >
+                                              Mint
+                              </Button>
+                              <MintModal
+                                open={mintModalOpen}
+                                imageUrl={selectedImageUrl}
+                                imageName="Minted With AskHapi.com"
+                                prompt={userInput}
+                                handleClose={handleClose}
+                              />
                             </Center>
-                            */}
                           </div>
                         )}
                       </div>
@@ -615,39 +647,6 @@ export default function NFTDat() {
                 )}
 
             </Container>
-            <Button
-              onClick={openModal}
-              leftIcon={<IconPhoto size={18} />}
-            // eslint-disable-next-line max-len
-              styles={(theme) => ({
-                root: {
-                  backgroundColor: '#00acee',
-                  border: 0,
-                  height: 42,
-                  paddingLeft: 20,
-                  paddingRight: 20,
-                  marginLeft: 12,
-                  marginTop: 12,
-
-                  '&:hover': {
-                    backgroundColor: theme.fn.darken('#00acee', 0.05),
-                  },
-                },
-
-                leftIcon: {
-                  marginRight: 15,
-                },
-              })}
-            >
-                            Open Mint Modal
-            </Button>
-            <MintModal
-              open={mintModalOpen}
-              imageUrl={selectedImageUrl}
-              imageName="Minted With AskHapi.com"
-              prompt={userInput}
-              handleClose={handleClose}
-            />
             <Center shadow="xl" radius="lg" p="md" style={{ overflowX: 'scroll', backgroundColor: 'blue.3' }}>
               {previousImages.map((image) => (
                   <Paper shadow="xs" radius="lg" p="md" key="image">
