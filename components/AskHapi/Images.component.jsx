@@ -155,7 +155,7 @@ export default function NFTDat() {
       setPrompt('');
       setResult('');
     }
-    async function payWithTwetch() {
+    async function payWithTwetch(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       try {
@@ -172,7 +172,7 @@ export default function NFTDat() {
             contract: 'payment',
             outputs: [{
               to: '16015@twetch.me',
-              sats: satsFee,
+              sats,
             }],
           });
       } catch (err) {
@@ -182,7 +182,7 @@ export default function NFTDat() {
       console.log(paymentResponse.actionId);
       return true;
     }
-    async function payWithSensilet() {
+    async function payWithSensilet(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       try {
@@ -198,7 +198,7 @@ export default function NFTDat() {
           receivers: [
             {
               address: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY',
-              amount: satsFee,
+              amount: sats,
             },
           ],
         });
@@ -209,7 +209,7 @@ export default function NFTDat() {
       console.log('Sensilet Payment Response', paymentResponse);
       return true;
     }
-    async function payWithRelay() {
+    async function payWithRelay(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       console.log(w);
@@ -229,7 +229,7 @@ export default function NFTDat() {
         }
       }
       try {
-        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (satsFee / 100000000), currency: 'BSV' });
+        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (sats / 100000000), currency: 'BSV' });
         console.log('Relay Payment Response', response);
         paid = true;
       } catch (_error) {
@@ -238,7 +238,7 @@ export default function NFTDat() {
       }
       return paid;
     }
-    async function pay() {
+    async function pay(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       let paid = false;
@@ -246,9 +246,11 @@ export default function NFTDat() {
       //const isPhantomInstalled = window.phantom?.solana?.isPhantom;
       //const isSensiletInstalled = (w.sensilet);
 
-      if (isTwetchInstalled) { paid = await payWithTwetch(); }
+      if (isTwetchInstalled) { paid = await payWithTwetch(sats); }
       //else if (isPhantomInstalled) { paid = await payWithPhantom(); }
-      else if (hasSensiletWallet) { paid = payWithSensilet(); } else { paid = payWithRelay(); }
+      else if (hasSensiletWallet) {
+        paid = payWithSensilet(sats);
+      } else { paid = payWithRelay(sats); }
       return paid;
     }
     function onTextChanged(e) {
@@ -258,7 +260,7 @@ export default function NFTDat() {
         setLoading(true);
         let paid = true;
         console.log({ _drawer }, { _model });
-        paid = await pay();
+        paid = await pay(sats);
         if (paid === false) { return; }
         let _body;
         if (_drawer) {
@@ -382,12 +384,20 @@ export default function NFTDat() {
       if (modelId === '3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912') {
         return satsFeeBase;
       }
+      if (modelId === 'b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8') {
+        return satsFeeBase * 3;
+      }
       return satsFeeBase;
     }
     async function generateStableDiffusion() {
       setModel('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc');
       setSatsFee(calculateSatsFee());
       await generateResponse('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc', satsFeeBase);
+    }
+    async function generateRedshift() {
+      setModel('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8');
+      setSatsFee(275000);
+      await generateResponse('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8', 275000);
     }
     async function generatePokemon() {
       setModel('3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912');
@@ -469,7 +479,8 @@ export default function NFTDat() {
                             style={{ marginTop: '4px' }}
                           >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                             <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Realistic 4¢</Button> </div>
+                              <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 12¢</Button> </div>
+                              <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>
                              <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>
                              <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>
                           </Flex>
