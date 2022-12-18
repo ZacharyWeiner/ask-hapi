@@ -21,6 +21,11 @@ export default async function handler(req, res) {
         version:req.body.version, 
         input: { prompt: "archer style " + req.body.prompt, grid_size: 1 }, 
       })
+    } else if (req.body.version === "b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "redshift style " + req.body.prompt, grid_size: 1 }, 
+      })
     }
     
     else {
