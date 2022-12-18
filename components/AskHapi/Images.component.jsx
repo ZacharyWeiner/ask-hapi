@@ -1,5 +1,5 @@
 import Script from 'next/script';
-import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea, Paper } from '@mantine/core';
+import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea, Paper, Flex } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { IconArrowBack, IconBrandTwitter, IconPhoto, IconArrowsShuffle2 } from '@tabler/icons';
@@ -232,7 +232,8 @@ export default function NFTDat() {
         const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (satsFee / 100000000), currency: 'BSV' });
         console.log('Relay Payment Response', response);
         paid = true;
-      } catch (error) {
+      } catch (_error) {
+        alert(_error);
         paid = false;
       }
       return paid;
@@ -399,6 +400,16 @@ export default function NFTDat() {
       setSatsFee(1000000);
       await generateResponse('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf', 1000000, 'pixel');
     }
+    async function generateArcane() {
+      setModel('a8cd5deb8f36f64f267aa7ed57fce5fc7e1761996f0d81eadd43b3ec99949b70');
+      setSatsFee(100000);
+      await generateResponse('a8cd5deb8f36f64f267aa7ed57fce5fc7e1761996f0d81eadd43b3ec99949b70', 100000);
+    }
+    async function generateArcher() {
+      setModel('5eb8c570de53a4325cb8e05ea591bd32befde542edb84991da4e416c1adeef52');
+      setSatsFee(100000);
+      await generateResponse('5eb8c570de53a4325cb8e05ea591bd32befde542edb84991da4e416c1adeef52', 100000);
+    }
     async function generateVariations() {
       setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
       setSatsFee(1000000);
@@ -446,15 +457,25 @@ export default function NFTDat() {
                     label="Ask HAPI to create anything"
                     withAsterisk
                   />
+                 {!loading && (
                   <div>
                       <Center>
-                          <div style={{ marginTop: '12px' }}>
+                          <Flex
+                            gap="md"
+                            justify="flex-start"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                            style={{ marginTop: '4px' }}
+                          >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                              <Button variant="gradient" style={{ marginRight: '4px' }} onClick={generateStableDiffusion}>Make Pic 4¢</Button>
-                              <Button variant="outline" onClick={generatePokemon}>Make Pokemon 4¢</Button>
-                          </div>
+                             <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Realistic 4¢</Button> </div>
+                             <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>
+                             <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>
+                          </Flex>
                       </Center>
                   </div>
+                )}
                 </div>
                 {/* {
                   (result?.length < 1)

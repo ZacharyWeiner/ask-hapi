@@ -219,6 +219,7 @@ export default function AskHapi(props) {
         paid = true;
       } catch (error) {
         paid = false;
+        alert(error);
       }
       return paid;
     }
