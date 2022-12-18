@@ -397,7 +397,7 @@ export default function NFTDat() {
     async function generateRedshift() {
       setModel('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8');
       setSatsFee(275000);
-      await generateResponse('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8', 275000);
+      await generateResponse('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8', 200000);
     }
     async function generatePokemon() {
       setModel('3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912');
@@ -479,7 +479,7 @@ export default function NFTDat() {
                             style={{ marginTop: '4px' }}
                           >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                              <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 12¢</Button> </div>
+                              <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 8¢</Button> </div>
                               <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>
                              <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>
                              <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>
