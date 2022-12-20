@@ -90,7 +90,7 @@ const useStyles = createStyles((theme) => ({
     },
   }));
 
-export default function NFTDat() {
+export default function NFTDat(props) {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState([]);
@@ -420,6 +420,16 @@ export default function NFTDat() {
       setSatsFee(100000);
       await generateResponse('5eb8c570de53a4325cb8e05ea591bd32befde542edb84991da4e416c1adeef52', 100000);
     }
+    async function generateWaifu() {
+      setModel('f410ed4c6a0c3bf8b76747860b3a3c9e4c8b5a827a16eac9dd5ad9642edce9a2');
+      setSatsFee(100000);
+      await generateResponse('f410ed4c6a0c3bf8b76747860b3a3c9e4c8b5a827a16eac9dd5ad9642edce9a2', 100000);
+    }
+    async function generateFunko() {
+      setModel('85a9b91c85d1a6d74a045286af193530215cb384e55ec1eaab5611a8e36030f8');
+      setSatsFee(100000);
+      await generateResponse('85a9b91c85d1a6d74a045286af193530215cb384e55ec1eaab5611a8e36030f8', 100000);
+    }
     async function generateVariations() {
       setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
       setSatsFee(1000000);
@@ -479,10 +489,12 @@ export default function NFTDat() {
                             style={{ marginTop: '4px' }}
                           >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                              <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 8¢</Button> </div>
-                              <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>
-                             <div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>
-                             <div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>
+                              {props.redshift && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 8¢</Button> </div>)}
+                              {props.dream && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>)}
+                              {props.depth && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>)}
+                              {props.flat && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>)}
+                              {props.waifu && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateWaifu}>Waifu 4¢</Button> </div>)}
+                              {props.funko && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateFunko}>Funko 4¢</Button> </div>)}
                           </Flex>
                       </Center>
                   </div>
