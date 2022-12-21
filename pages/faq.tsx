@@ -36,6 +36,12 @@ const questions = [
     { question: 'What Wallets Do You Support?',
         answer: "ASK HAPI will try to work with all web3 wallets. For now we support BSV Wallets. We support Relay on mobile. If you're using a Laptop or desktop we also support the Twetch & Sensilet Browser Extension wallets.",
     },
+    { question: 'How do I use AskHapi on iOS?',
+        answer: "Relay is the only wallet that works on mobile. Login with Relay you have to use Safari on iPhones and turn off 'cross site tracking'. \n Here are the steps to turn off cross-site tracking protection in Safari for iOS: \n On your iPhone or iPad, open the 'Settings' app. \n Tap 'Safari'. \n Scroll down and tap 'Privacy & Security'. \n Toggle the 'Prevent Cross-Site Tracking' switch to the off position.",
+    },
+    { question: 'How do I use AskHapi on Android?',
+        answer: "Relay is the only wallet that works on mobile. Login with Relay you have to use Chrome on Android Phones and turn off 'cross site tracking'. \n Here are the steps to turn off cross-site tracking protection in Chrome for Android: \n On your Android device, open the Chrome app. \n Tap the three vertical dots in the top right corner of the screen. \n Tap 'Settings'. \n Tap 'Privacy'. \n Tap 'Ads'. \n Toggle the 'Opt out of Ads Personalization' switch to the off position.",
+    },
 ];
 
 export default function FaqWithImage() {
@@ -59,7 +65,7 @@ export default function FaqWithImage() {
               { questions.map((q) => (
                     <Accordion.Item className={classes.item} value={q.question}>
                         <Accordion.Control>{q.question}</Accordion.Control>
-                        <Accordion.Panel>{q.answer}</Accordion.Panel>
+                        <Accordion.Panel style={{ flex: 1, flexWrap: 'wrap', whiteSpace: 'pre-wrap' }}>{q.answer}</Accordion.Panel>
                     </Accordion.Item>))
                 }
             </Accordion>
