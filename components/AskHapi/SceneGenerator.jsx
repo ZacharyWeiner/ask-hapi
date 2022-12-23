@@ -210,7 +210,7 @@ export default function AskHapi(props) {
           //if (data.origin !== "yourdomain.com") throw new Error();
         } catch (err) {
           // eslint-disable-next-line no-alert
-          alert('could not log in.');
+          alert('Could not log in. Please Try Chrome or Safari');
         }
       }
       try {

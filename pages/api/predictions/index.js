@@ -11,7 +11,29 @@ export default async function handler(req, res) {
         version:req.body.version, 
         input: { input_image: req.body.inputImage}, 
       })
-    } else {
+    } else if (req.body.version === "a8cd5deb8f36f64f267aa7ed57fce5fc7e1761996f0d81eadd43b3ec99949b70"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "arcane style " + req.body.prompt, grid_size: 1 }, 
+      })
+    } else if (req.body.version === "5eb8c570de53a4325cb8e05ea591bd32befde542edb84991da4e416c1adeef52"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "archer style " + req.body.prompt, grid_size: 1 }, 
+      })
+    } else if (req.body.version === "b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "redshift style " + req.body.prompt, grid_size: 1 }, 
+      })
+    } else if (req.body.version === "85a9b91c85d1a6d74a045286af193530215cb384e55ec1eaab5611a8e36030f8"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "funko style " + req.body.prompt, grid_size: 1 }, 
+      })
+    }
+    
+    else {
       _body = JSON.stringify({
         version:req.body.version, 
         input: { prompt: req.body.prompt, grid_size: 1 }, 

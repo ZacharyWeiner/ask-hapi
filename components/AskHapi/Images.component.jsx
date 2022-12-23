@@ -1,5 +1,5 @@
 import Script from 'next/script';
-import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea, Paper } from '@mantine/core';
+import { createStyles, keyframes, Center, Button, Image, Container, Text, Textarea, Paper, Flex, Modal } from '@mantine/core';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { IconArrowBack, IconBrandTwitter, IconPhoto, IconArrowsShuffle2 } from '@tabler/icons';
@@ -91,7 +91,7 @@ const useStyles = createStyles((theme) => ({
     },
   }));
 
-export default function NFTDat() {
+export default function NFTDat(props) {
     const { classes } = useStyles();
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState([]);
@@ -112,6 +112,7 @@ export default function NFTDat() {
     const [mintModalOpen, setMintModalOpen] = useState(false);
     const [drawer, setDrawer] = useState();
     const [selectedImageUrl, setSelectedImageUrl] = useState('');
+    const [errorModalOpened, setErrorModalOpened] = useState(false);
     // eslint-disable-next-line no-promise-executor-return
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     useEffect(() => {
@@ -158,7 +159,7 @@ export default function NFTDat() {
       setPrompt('');
       setResult('');
     }
-    async function payWithTwetch() {
+    async function payWithTwetch(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       try {
@@ -167,7 +168,8 @@ export default function NFTDat() {
         console.log('Twetch Paymail: ', resp.paymail.toString());
       } catch (err) {
         // eslint-disable-next-line no-alert
-        alert(err);
+        setError(`${err.message}`);
+        setErrorModalOpened(true);
       }
       let paymentResponse;
       try {
@@ -175,7 +177,7 @@ export default function NFTDat() {
             contract: 'payment',
             outputs: [{
               to: '16015@twetch.me',
-              sats: satsFee,
+              sats,
             }],
           });
       } catch (err) {
@@ -185,7 +187,7 @@ export default function NFTDat() {
       console.log(paymentResponse.actionId);
       return true;
     }
-    async function payWithSensilet() {
+    async function payWithSensilet(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       try {
@@ -193,7 +195,8 @@ export default function NFTDat() {
         console.log('Sensilet Address:', resp.address);
       } catch (err) {
         // eslint-disable-next-line no-alert
-        alert(err);
+        setError(`${err.message}`);
+        setErrorModalOpened(true);
       }
       let paymentResponse;
       try {
@@ -201,7 +204,7 @@ export default function NFTDat() {
           receivers: [
             {
               address: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY',
-              amount: satsFee,
+              amount: sats,
             },
           ],
         });
@@ -212,7 +215,7 @@ export default function NFTDat() {
       console.log('Sensilet Payment Response', paymentResponse);
       return true;
     }
-    async function payWithRelay() {
+    async function payWithRelay(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       console.log(w);
@@ -227,20 +230,23 @@ export default function NFTDat() {
           // check its token from your origin
           //if (data.origin !== "yourdomain.com") throw new Error();
         } catch (err) {
-          // eslint-disable-next-line no-alert
-          alert('could not log in.', err);
+          // eslint-disable-next-line no-alerts
+          setError(`${err.message} Could not log in. Please Try Chrome or Safari`);
+          setErrorModalOpened(true);
         }
       }
       try {
-        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (satsFee / 100000000), currency: 'BSV' });
+        const response = await w.relayone.send({ to: '1EhuKT23ctLrmiyfVqF6Bsqyh8vxnYqWbY', amount: (sats / 100000000), currency: 'BSV' });
         console.log('Relay Payment Response', response);
         paid = true;
-      } catch (error) {
+      } catch (_error) {
+        setError(_error.message);
+        setErrorModalOpened(true);
         paid = false;
       }
       return paid;
     }
-    async function pay() {
+    async function pay(sats) {
       // eslint-disable-next-line no-undef
       const w = window;
       let paid = false;
@@ -248,9 +254,11 @@ export default function NFTDat() {
       //const isPhantomInstalled = window.phantom?.solana?.isPhantom;
       //const isSensiletInstalled = (w.sensilet);
 
-      if (isTwetchInstalled) { paid = await payWithTwetch(); }
+      if (isTwetchInstalled) { paid = await payWithTwetch(sats); }
       //else if (isPhantomInstalled) { paid = await payWithPhantom(); }
-      else if (hasSensiletWallet) { paid = payWithSensilet(); } else { paid = payWithRelay(); }
+      else if (hasSensiletWallet) {
+        paid = payWithSensilet(sats);
+      } else { paid = payWithRelay(sats); }
       return paid;
     }
     function onTextChanged(e) {
@@ -260,7 +268,7 @@ export default function NFTDat() {
         setLoading(true);
         let paid = true;
         console.log({ _drawer }, { _model });
-        paid = await pay();
+        paid = await pay(sats);
         if (paid === false) { return; }
         let _body;
         if (_drawer) {
@@ -328,7 +336,8 @@ export default function NFTDat() {
           setLoading(false);
         } catch (err) {
           console.log('Error Generating A Response:', err);
-          alert('Error Generating A Response:', err);
+          setError(err.message);
+          setErrorModalOpened(true);
         }
     }
     async function generateAIUpgrade() {
@@ -385,12 +394,20 @@ export default function NFTDat() {
       if (modelId === '3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912') {
         return satsFeeBase;
       }
+      if (modelId === 'b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8') {
+        return satsFeeBase * 3;
+      }
       return satsFeeBase;
     }
     async function generateStableDiffusion() {
       setModel('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc');
       setSatsFee(calculateSatsFee());
       await generateResponse('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc', satsFeeBase);
+    }
+    async function generateRedshift() {
+      setModel('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8');
+      setSatsFee(275000);
+      await generateResponse('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8', 200000);
     }
     async function generatePokemon() {
       setModel('3554d9e699e09693d3fa334a79c58be9a405dd021d3e11281256d53185868912');
@@ -402,6 +419,26 @@ export default function NFTDat() {
       setModel('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf');
       setSatsFee(1000000);
       await generateResponse('5c347a4bfa1d4523a58ae614c2194e15f2ae682b57e3797a5bb468920aa70ebf', 1000000, 'pixel');
+    }
+    async function generateArcane() {
+      setModel('a8cd5deb8f36f64f267aa7ed57fce5fc7e1761996f0d81eadd43b3ec99949b70');
+      setSatsFee(100000);
+      await generateResponse('a8cd5deb8f36f64f267aa7ed57fce5fc7e1761996f0d81eadd43b3ec99949b70', 100000);
+    }
+    async function generateArcher() {
+      setModel('5eb8c570de53a4325cb8e05ea591bd32befde542edb84991da4e416c1adeef52');
+      setSatsFee(100000);
+      await generateResponse('5eb8c570de53a4325cb8e05ea591bd32befde542edb84991da4e416c1adeef52', 100000);
+    }
+    async function generateWaifu() {
+      setModel('f410ed4c6a0c3bf8b76747860b3a3c9e4c8b5a827a16eac9dd5ad9642edce9a2');
+      setSatsFee(100000);
+      await generateResponse('f410ed4c6a0c3bf8b76747860b3a3c9e4c8b5a827a16eac9dd5ad9642edce9a2', 100000);
+    }
+    async function generateFunko() {
+      setModel('85a9b91c85d1a6d74a045286af193530215cb384e55ec1eaab5611a8e36030f8');
+      setSatsFee(100000);
+      await generateResponse('85a9b91c85d1a6d74a045286af193530215cb384e55ec1eaab5611a8e36030f8', 100000);
     }
     async function generateVariations() {
       setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
@@ -456,15 +493,28 @@ export default function NFTDat() {
                     label="Ask HAPI to create anything"
                     withAsterisk
                   />
+                 {!loading && (
                   <div>
                       <Center>
-                          <div style={{ marginTop: '12px' }}>
+                          <Flex
+                            gap="md"
+                            justify="flex-start"
+                            align="flex-start"
+                            direction="row"
+                            wrap="wrap"
+                            style={{ marginTop: '4px' }}
+                          >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                              <Button variant="gradient" style={{ marginRight: '4px' }} onClick={generateStableDiffusion}>Make Pic 4¢</Button>
-                              <Button variant="outline" onClick={generatePokemon}>Make Pokemon 4¢</Button>
-                          </div>
+                              {props.redshift && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 8¢</Button> </div>)}
+                              {props.dream && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>)}
+                              {props.depth && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>)}
+                              {props.flat && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>)}
+                              {props.waifu && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateWaifu}>Waifu 4¢</Button> </div>)}
+                              {props.funko && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateFunko}>Funko 4¢</Button> </div>)}
+                          </Flex>
                       </Center>
                   </div>
+                )}
                 </div>
                 {/* {
                   (result?.length < 1)
@@ -575,8 +625,10 @@ export default function NFTDat() {
                               </Button>
                             </Center>
                             <Center>
-                             {/* <div> <Button onClick={generateAIUpgrade} variant="gradient"> Upscale</Button></div>
+                            {/* <div> <Button onClick={generateAIUpgrade} variant="gradient"> Upscale</Button></div>
                               <div> <Text> *Upscale will not work on Pokemon</Text> </div> */}
+                             {props.mint && (
+                              <>
                               <Button
                                 onClick={openModal}
                                 leftIcon={<IconPhoto size={18} />}
@@ -610,6 +662,7 @@ export default function NFTDat() {
                                 prompt={userInput}
                                 handleClose={handleClose}
                               />
+                              </>)}
                             </Center>
                           </div>
                         )}
@@ -683,6 +736,13 @@ export default function NFTDat() {
                     </Center>
                   </Paper>))}
             </Center>
+            <Modal
+              opened={errorModalOpened}
+              onClose={() => setErrorModalOpened(false)}
+              title="Error"
+            >
+              {error}
+            </Modal>
             <Script src="https://one.relayx.io/relayone.js " strategy="lazyOnload" />
         </div>
     );

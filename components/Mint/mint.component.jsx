@@ -1,14 +1,17 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { Button, Center, Image, Text } from '@mantine/core';
+import { Anchor, Button, Flex, Center, Image, Text } from '@mantine/core';
 
-export default function MintImage({ imageUrl, imageName, prompt }) {
+export default function MintImage({ imageUrl, imageName, prompt, close }) {
     const deployEndpoint = 'api/run/deploy_contract';
     const mintEndpoint = 'api/run/mint_nft';
     const [title, setTitle] = useState('NFT FROM ASKHAPI.com');
     const [loading, setLoading] = useState('');
     const [status, setStatus] = useState('');
+    const [classTxid, setClassTxid] = useState('');
+    const [imageTxid, setImageTxid] = useState('');
+    const [error, setError] = useState('');
     console.log(imageName);
 
      function _bufferToAsm(b, type, name) {
@@ -63,7 +66,7 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
         const w = window;
         const { address, paymail, error } = await login();
         if (error) {
-            alert('there was an error logging in');
+            alert('There was an error logging in. Try using Chrome or Safari');
             console.log(error);
             setLoading(false);
             return;
@@ -103,6 +106,7 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
 
           //Broadcast the Returned TX
           const sendResponse = await w.relayone.send(bsvtx.toString());
+          setClassTxid(sendResponse.txid);
           console.log('recieves response from send:', sendResponse);
           setStatus('Minting Class Complete ...');
           const _location = `${sendResponse.txid}_o2`;
@@ -115,21 +119,27 @@ export default function MintImage({ imageUrl, imageName, prompt }) {
           const mintResponse =
                   await w.relayone.send(mintTxResponse.data.data.rawtx.toString());
           console.log(mintResponse);
-          setStatus('Success!');
-        } catch (err) { console.log(err); setStatus('Failed :*|'); }
-        setLoading(false);
+          setImageTxid(mintResponse.txid);
+          setStatus('success');
+        } catch (err) { setError(err.message); console.log(err); setStatus('Failed :*|'); }
     }
     return (
             <div>
                 <Center>
-                  <Text> {title} </Text>
+                  <Text size="xl" padding="md"> {title} </Text>
                 </Center>
                 <Center>
-                    <Image src={imageUrl} height="100%" width="100%" radius="xl" style={{ maxHeight: '500px', maxWidth: '500px' }} />
+                    <Image src={imageUrl} height="100%" width="100%" radius="xl" style={{ maxHeight: '420px', maxWidth: '420px' }} />
                 </Center>
+                <Center style={{ margin: '12px' }}><Text color="red" size="xs">You must be logged into Relay to mint. </Text></Center>
                 <Center style={{ margin: '12px' }}>
-                    <Button type="button" onClick={mintClass}> {loading ? status : 'Mint This On Relay!'} </Button>
+                  <div>
+                    { (status !== 'success') && (<Button type="button" variant="outline" onClick={mintClass} style={{ width: '100%' }}> {loading ? status : 'Mint This On Relay!'} </Button>)}
+                    { (status === 'success') && (<div> <Button type="button" variant="outline" onClick={close} style={{ width: '100%' }}> Close </Button></div>)}
+                    { (status === 'success') && (<div style={{ marginTop: '16px' }}> <Anchor width="100%" type="button" href={`https://www.relayx.com/assets/${classTxid}_o2/${imageTxid}_o2`} target="_blank" rel="noreferrer"> <Button> View This On Relay!  </Button></Anchor></div>)}
+                  </div>
                 </Center>
+                <Text> {error}</Text>
             </div>
         );
 }

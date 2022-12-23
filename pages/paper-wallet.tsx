@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { IconArrowLeftBar } from '@tabler/icons';
 // import Link from 'next/link';
@@ -9,18 +9,23 @@ import WalletsList from '../components/PaperWallet/card-list/card-list.component
 declare const window: any;
 export default function PaperWallet() {
     const [accounts, setAccounts] = useState<Array<Object>>([]);
+    // useEffect(() => {
+    //     const mnemonic = new window.bsvMnemonic(window.bsvMnemonic.Words.ENGLISH);
+    //     console.log({ mnemonic });
+    // }, []);
     function createKeys() {
-        // const mnemonic = new window.bsvMnemonic(window.bsvMnemonic.Words.ENGLISH);
-        // console.log({ mnemonic });
-        // // eslint-disable-next-line new-cap
-        // const hd = new window.bsvMnemonic(mnemonic.toString()).toHDPrivateKey();
-        // console.log(hd);
+       // eslint-disable-next-line new-cap
+    //    const mnemonic = new window.bsvMnemonic(window.bsvMnemonic.Words.ENGLISH);
+    //     console.log({ mnemonic });
+    //     // eslint-disable-next-line new-capyarn dev
+    //     const hd = new window.bsvMnemonic(mnemonic.toString()).toHDPrivateKey();
+    //     console.log(hd);
         const accountsHolder = [];
         // eslint-disable-next-line no-plusplus
         for (let x = 0; x < 10; x++) {
-            // let path = `m/44'/0'/1'/${x}/0`;
+            // const path = `m/44'/0'/1'/${x}/0`;
             // const derivedChild = hd.deriveChild(path).privateKey.toString();
-            //console.log(path, derivedChild);
+            // console.log(path, derivedChild);
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { bsv } = window;
             const { nimble } = window;

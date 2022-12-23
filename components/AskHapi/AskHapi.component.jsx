@@ -210,7 +210,7 @@ export default function AskHapi(props) {
           //if (data.origin !== "yourdomain.com") throw new Error();
         } catch (err) {
           // eslint-disable-next-line no-alert
-          alert('could not log in.');
+          alert('could not log in to relay.');
         }
       }
       try {
@@ -219,6 +219,7 @@ export default function AskHapi(props) {
         paid = true;
       } catch (error) {
         paid = false;
+        alert("Relay error:", error);
       }
       return paid;
     }
@@ -296,6 +297,7 @@ export default function AskHapi(props) {
                     label={props.labelText ? props.labelText : 'Ask HAPI to create anything'}
                     withAsterisk
                   />
+                  <Text size='xs' color="red"> </Text> 
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
