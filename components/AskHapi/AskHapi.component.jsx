@@ -219,7 +219,12 @@ export default function AskHapi(props) {
         paid = true;
       } catch (error) {
         paid = false;
-        alert("Relay error:", error);
+        console.log(error.message.includes('Low funds'));
+        if (error.message.includes('Low funds')) {
+          alert('Relay error: Not Enough Bitcoin');
+          return paid;
+        }
+          alert('Relay error:', error.toString(), 'Try Twetch or Sensilet');
       }
       return paid;
     }
@@ -297,7 +302,7 @@ export default function AskHapi(props) {
                     label={props.labelText ? props.labelText : 'Ask HAPI to create anything'}
                     withAsterisk
                   />
-                  <Text size='xs' color="red"> </Text> 
+                  <Text size="xs" color="red"> </Text>
                   <div>
                       <Center>
                           <div style={{ margin: '12px' }}>
