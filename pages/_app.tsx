@@ -42,6 +42,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             <Component {...pageProps} />
             <Footer links={[{ label: 'Home', link: '/' },
                             { label: 'Generate Pics', link: '/images' },
+                            { label: 'Patterns', link: '/pattern' },
                             { label: 'Waifu', link: '/waifu' },
                             { label: 'Funko', link: '/funko' },
                             { label: 'Ai FaceFix', link: '/upgrade-face' },

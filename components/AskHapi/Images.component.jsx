@@ -445,6 +445,11 @@ export default function NFTDat(props) {
       setSatsFee(100000);
       await generateResponse('85a9b91c85d1a6d74a045286af193530215cb384e55ec1eaab5611a8e36030f8', 100000);
     }
+    async function generatePattern() {
+      setModel('3b5c0242f8925a4ab6c79b4c51e9b4ce6374e9b07b5e8461d89e692fd0faa449');
+      setSatsFee(100000);
+      await generateResponse('3b5c0242f8925a4ab6c79b4c51e9b4ce6374e9b07b5e8461d89e692fd0faa449', 100000);
+    }
     async function generateVariations() {
       setModel('7c399ba0e1b33ed8ec39ed30eb6b0a2d9e054462543c428c251293034af82a8e');
       setSatsFee(1000000);
@@ -516,6 +521,7 @@ export default function NFTDat(props) {
                               {props.flat && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>)}
                               {props.waifu && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateWaifu}>Waifu 4¢</Button> </div>)}
                               {props.funko && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateFunko}>Funko 4¢</Button> </div>)}
+                              {props.pattern && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generatePattern}>Pattern 4¢</Button> </div>)}
                           </Flex>
                       </Center>
                   </div>
