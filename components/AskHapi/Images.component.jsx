@@ -404,9 +404,14 @@ export default function NFTDat(props) {
       setSatsFee(calculateSatsFee());
       await generateResponse('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc', satsFeeBase);
     }
+    async function generateOpenJourney() {
+      setModel('9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb');
+      setSatsFee(calculateSatsFee());
+      await generateResponse('9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb', satsFeeBase * 1.5);
+    }
     async function generateRedshift() {
       setModel('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8');
-      setSatsFee(275000);
+      setSatsFee(200000);
       await generateResponse('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8', 200000);
     }
     async function generatePokemon() {
@@ -505,7 +510,7 @@ export default function NFTDat(props) {
                             style={{ marginTop: '4px' }}
                           >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                              {props.redshift && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 8¢</Button> </div>)}
+                              {props.redshift && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Realistic 6¢</Button> </div>)}
                               {props.dream && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>)}
                               {props.depth && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>)}
                               {props.flat && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>)}

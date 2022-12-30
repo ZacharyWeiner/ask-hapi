@@ -32,7 +32,12 @@ export default async function handler(req, res) {
         input: { prompt: "funko style " + req.body.prompt, grid_size: 1 }, 
       })
     }
-    
+    else if (req.body.version === "9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: req.body.prompt, grid_size: 1 }, 
+      })
+    }
     else {
       _body = JSON.stringify({
         version:req.body.version, 
