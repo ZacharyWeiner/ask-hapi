@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-script-component-in-head */
 import { useState } from 'react';
+import Script from 'next/script';
 import NextApp, { AppProps, AppContext } from 'next/app';
 import { getCookie, setCookie } from 'cookies-next';
 import Head from 'next/head';
@@ -34,6 +36,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         <meta property="og:title" content="Ask HAPI" />
         <meta property="og:description" content="AI For Everyone" />
         <meta property="og:image" content="https:/www.askhapi.com/hapi-neutral.png" />
+
       </Head>
 
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
