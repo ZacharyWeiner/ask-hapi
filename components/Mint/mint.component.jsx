@@ -6,7 +6,7 @@ import { Anchor, Button, Flex, Center, Image, Text } from '@mantine/core';
 export default function MintImage({ imageUrl, imageName, prompt, close }) {
     const deployEndpoint = 'api/run/deploy_contract';
     const mintEndpoint = 'api/run/mint_nft';
-    const [title, setTitle] = useState('NFT FROM ASKHAPI.com');
+    const [title, setTitle] = useState('"#No Filter - By AskHapi"');
     const [loading, setLoading] = useState('');
     const [status, setStatus] = useState('');
     const [classTxid, setClassTxid] = useState('');
