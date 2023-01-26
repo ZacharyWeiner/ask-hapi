@@ -32,10 +32,22 @@ export default async function handler(req, res) {
         input: { prompt: "funko style " + req.body.prompt, grid_size: 1 }, 
       })
     }
+    else if (req.body.version === "436b051ebd8f68d23e83d22de5e198e0995357afef113768c20f0b6fcef23c8b"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "mdjrny-v4 style " + req.body.prompt, grid_size: 1 }, 
+      })
+    }
+    else if (req.body.version === "629a9fe82c7979c1dab323aedac2c03adaae2e1aecf6be278a51fde0245e20a4"){
+      _body = JSON.stringify({
+        version:req.body.version, 
+        input: { prompt: "portrait+ style photograph " + req.body.prompt, negative_prompt: "", grid_size: 1 }, 
+      })
+    }
     else if (req.body.version === "9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb"){
       _body = JSON.stringify({
         version:req.body.version, 
-        input: { prompt: req.body.prompt, grid_size: 1 }, 
+        input: { prompt: "mdjrny-v4 style " + req.body.prompt, grid_size: 1 }, 
       })
     }
     else {

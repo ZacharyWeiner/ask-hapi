@@ -400,14 +400,19 @@ export default function NFTDat(props) {
       return satsFeeBase;
     }
     async function generateStableDiffusion() {
-      setModel('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc');
+      setModel('f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1');
       setSatsFee(calculateSatsFee());
-      await generateResponse('7a4ee1531fc9b0f8a094692b7b38851a23385df662aa958a0a65a731fcc355bc', satsFeeBase);
+      await generateResponse('f178fa7a1ae43a9a9af01b833b9d2ecf97b1bcb0acfd2dc5dd04895e042863f1', satsFeeBase);
+    }
+    async function generatePhotograph() {
+      setModel('629a9fe82c7979c1dab323aedac2c03adaae2e1aecf6be278a51fde0245e20a4');
+      setSatsFee(calculateSatsFee());
+      await generateResponse('629a9fe82c7979c1dab323aedac2c03adaae2e1aecf6be278a51fde0245e20a4', satsFeeBase);
     }
     async function generateOpenJourney() {
-      setModel('9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb');
+      setModel('436b051ebd8f68d23e83d22de5e198e0995357afef113768c20f0b6fcef23c8b');
       setSatsFee(calculateSatsFee());
-      await generateResponse('9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb', satsFeeBase * 1.5);
+      await generateResponse('436b051ebd8f68d23e83d22de5e198e0995357afef113768c20f0b6fcef23c8b', satsFeeBase * 1.5);
     }
     async function generateRedshift() {
       setModel('b78a34f0ec6d21d22ae3b10afd52b219cec65f63362e69e81e4dce07a8154ef8');
@@ -515,10 +520,12 @@ export default function NFTDat(props) {
                             style={{ marginTop: '4px' }}
                           >
                               {/* <Button style={{ marginRight: '4px' }} onClick={generatePixelArt}>Make Pixel Art 50¢</Button> */}
-                              {props.redshift && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateOpenJourney}>Realistic 6¢</Button> </div>)}
-                              {props.dream && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Dream 4¢</Button> </div>)}
-                              {props.depth && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon 4¢</Button> </div>)}
-                              {props.flat && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon 5¢</Button> </div>)}
+                              {props.openJourney && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateOpenJourney}>Mid Journey 4 4¢</Button> </div>)}
+                              {props.portrait && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generatePhotograph}>Portrait Photo 4¢</Button> </div>)}
+                              {props.redshift && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateRedshift}>Redshift (Realistic) 4¢</Button> </div>)}
+                              {props.dream && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateStableDiffusion}>Stable Diffusion 2.1 4¢</Button> </div>)}
+                              {props.depth && (<div style={{ width: '100%' }}>  <Button variant="outline" style={{ width: '100%' }} onClick={generateArcane}>3D Cartoon (Animated Movie) 4¢</Button> </div>)}
+                              {props.flat && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateArcher}>Flat Cartoon (Archer) 5¢</Button> </div>)}
                               {props.waifu && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateWaifu}>Waifu 4¢</Button> </div>)}
                               {props.funko && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generateFunko}>Funko 4¢</Button> </div>)}
                               {props.pattern && (<div style={{ width: '100%' }}>  <Button variant="gradient" style={{ width: '100%' }} onClick={generatePattern}>Pattern 4¢</Button> </div>)}
@@ -700,6 +707,7 @@ export default function NFTDat(props) {
                     {upscale.output && (
                       <Center>
                         <Image
+                          key={upscale.output}
                           src={upscale.output}
                           alt="output"
                           width={500}
@@ -713,7 +721,7 @@ export default function NFTDat(props) {
             </Container>
             <Center shadow="xl" radius="lg" p="md" style={{ overflowX: 'scroll', backgroundColor: 'blue.3' }}>
               {previousImages.map((image) => (
-                  <Paper shadow="xs" radius="lg" p="md" key="image">
+                  <Paper shadow="xs" radius="lg" p="md" key={image}>
                     <Image width="250px" height="250px" src={image} radius="lg" />
                     <Center>
                       <Button
