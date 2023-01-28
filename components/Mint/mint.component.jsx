@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { Anchor, Button, Flex, Center, Image, Text } from '@mantine/core';
+import { Anchor, Button, Flex, Center, Image, Input, Text } from '@mantine/core';
 
 export default function MintImage({ imageUrl, imageName, prompt, close }) {
     const deployEndpoint = 'api/run/deploy_contract';
@@ -13,7 +13,9 @@ export default function MintImage({ imageUrl, imageName, prompt, close }) {
     const [imageTxid, setImageTxid] = useState('');
     const [error, setError] = useState('');
     console.log(imageName);
-
+    function handleChanged(e) {
+        setTitle(e.target.value);
+    }
      function _bufferToAsm(b, type, name) {
         const script = [
           '0',
@@ -128,6 +130,8 @@ export default function MintImage({ imageUrl, imageName, prompt, close }) {
                 <Center>
                   <Text size="xl" padding="md"> {title} </Text>
                 </Center>
+                <div> <Input onChange={handleChanged} placeholder="Set a custom title" padding="md" margin="md" /></div>
+                <div> <br /> </div>
                 <Center>
                     <Image src={imageUrl} height="100%" width="100%" radius="xl" style={{ maxHeight: '420px', maxWidth: '420px' }} />
                 </Center>
